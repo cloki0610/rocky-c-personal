@@ -6,19 +6,6 @@ import { fadeIn } from "../utils/motion";
 const AboutPage = () => {
   return (
     <div className="sm:px-16 px-6 absolute inset-0 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-5 pt-[150px] lg:pt-0">
-      <motion.div
-        variants={fadeIn("right", "spring", 0, 2, 0)}
-        initial="hidden"
-        animate="show"
-      >
-        <Image
-          aria-hidden
-          src="/icon-2024.png"
-          alt="Rocky's logo image"
-          width={600}
-          height={600}
-        />
-      </motion.div>
       <div>
         <motion.p
           variants={fadeIn("down", "spring", 1, 2, 0)}
@@ -31,14 +18,46 @@ const AboutPage = () => {
           frameworks.
         </motion.p>
         <motion.p
-          variants={fadeIn("left", "spring", 2, 2, 0)}
+          variants={fadeIn("left", "spring", 1.5, 2, 0)}
           className="mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]"
           initial="hidden"
           animate="show"
         >
-          Focused on expanding my skills in AI integration and web development.
+          Focused on expanding my skills in AI integration and web development. <br/>
           Contact via Instagram(cloki0610) or email(cloki0610@gmail.com).
         </motion.p>
+        <p className="flex gap-[36px] mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]">
+          <motion.a
+            variants={fadeIn("right", "spring", 2.5, 2, 0)}
+            initial="hidden"
+            animate="show"
+            whileHover={{ scale: 1.1, rotateY: 180 }}
+            whileTap={{ scale: 0.9 }}
+            href="https://github.com/cloki0610"
+          >
+            <Image src="/gh.svg" alt="My GitHub" width={50} height={50} />
+          </motion.a>
+          <motion.a
+            variants={fadeIn("right", "spring", 3, 2, 0)}
+            initial="hidden"
+            animate="show"
+            whileHover={{ scale: 1.1, rotateX: 180 }}
+            whileTap={{ scale: 0.9 }}
+            href="https://www.instagram.com/cloki0610/"
+          >
+            <Image src="/ins.svg" alt="My Instagram" width={50} height={50} />
+          </motion.a>
+          <motion.a
+            variants={fadeIn("right", "spring", 3.5, 2, 0)}
+            initial="hidden"
+            animate="show"
+            whileHover={{ scale: 1.1, rotateY: 180 }}
+            whileTap={{ scale: 0.9 }}
+            href="mailto:cloki0610@gamil.com"
+          >
+            <Image src="/email.svg" alt="My Email" width={50} height={50} />
+          </motion.a>
+        </p>
       </div>
     </div>
   );
