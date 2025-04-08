@@ -1,12 +1,16 @@
 "use client";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Link } from "next-view-transitions";
+import { AnimatePresence, motion } from "framer-motion";
 
 import menuItem from "../utils/menu";
 import SiteLogo from "./SiteLogo";
+import { fadeIn } from "../utils/motion";
 
 const SiteMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const path = usePathname();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,9 +22,17 @@ const SiteMenu = () => {
         <div className="flex items-center justify-between h-24">
           {/* Logo and site name */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              href="/"
+              className="flex items-center"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <SiteLogo />
-              <span className="text-3xl text-[#8d6e63] font-bold">Rocky.C</span>
+              {path !== "/" && (
+                <span className="text-3xl text-[#8d6e63] font-bold site-title">
+                  Rocky.C
+                </span>
+              )}
             </Link>
           </div>
 
@@ -49,13 +61,15 @@ const SiteMenu = () => {
               <span className="sr-only">Open main menu</span>
               {/* Icon when menu is closed */}
               {!isMenuOpen ? (
-                <svg
+                <motion.svg
                   className="block h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   aria-hidden="true"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <path
                     strokeLinecap="round"
@@ -63,16 +77,18 @@ const SiteMenu = () => {
                     strokeWidth="2"
                     d="M4 6h16M4 12h16M4 18h16"
                   />
-                </svg>
+                </motion.svg>
               ) : (
                 /* Icon when menu is open */
-                <svg
+                <motion.svg
                   className="block h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   aria-hidden="true"
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <path
                     strokeLinecap="round"
@@ -80,7 +96,7 @@ const SiteMenu = () => {
                     strokeWidth="2"
                     d="M6 18L18 6M6 6l12 12"
                   />
-                </svg>
+                </motion.svg>
               )}
             </button>
           </div>
@@ -88,20 +104,29 @@ const SiteMenu = () => {
       </div>
 
       {/* Mobile menu, show/hide based on menu state */}
-      <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          {menuItem.map((item, i) => (
-            <Link
-              key={`${item.name}-${i}`}
-              href={item.url}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 hover:text-white"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
-      </div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            variants={fadeIn("down", "spring", 0.5, 2, 2)}
+            initial={{ translateY: -20, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ translateY: -20, opacity: 0 }}
+          >
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              {menuItem.map((item, i) => (
+                <Link
+                  key={`${item.name}-${i}`}
+                  href={item.url}
+                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

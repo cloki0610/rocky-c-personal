@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { fadeIn } from "./utils/motion";
+
 export default function Home() {
   return (
     <main>
@@ -13,7 +14,7 @@ export default function Home() {
             className="font-black text-black text-[60px] lg:text-[80px]
             lg:leading-[98px] mt-2 select-none"
           >
-            Hi, I&apos;m <span className="text-[#8d6e63]">Rocky.C</span>
+            Hi, I&apos;m <span className="text-[#8d6e63] site-title">Rocky.C</span>
           </motion.h1>
           <motion.p
             variants={fadeIn("left", "spring", 0.5, 2)}
@@ -22,7 +23,7 @@ export default function Home() {
             className="text-black font-medium lg:text-[30px] sm:text-[24px] xs:text-[16px] text-[16px] 
             lg:leading-[40px] mt-2 text-white-100 select-none"
           >
-            Here will be used to showcase prototypes of some ideas.
+            Casually share some prototype and weird ideas.
           </motion.p>
         </div>
       </section>

@@ -15,30 +15,29 @@ const AboutPage = () => {
           aria-hidden
           src="/icon-2024.png"
           alt="Rocky's logo image"
-          width={1200}
-          height={1200}
+          width={600}
+          height={600}
         />
       </motion.div>
       <div>
         <motion.p
           variants={fadeIn("down", "spring", 1, 2, 0)}
-          className="mt-4 text-secondary text-xl md:text-3xl max-2-3xl leading-[30px]"
+          className="mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]"
           initial="hidden"
           animate="show"
         >
-          I&apos;m a Junior Software Engineer at WorkL, skilled in
-          JavaScript/TypeScript, Python, Rust, Django, Node.js, and modern
-          front-end frameworks like Vue and Next.js.
+          Currently working as a Junior Software Engineer at WorkL, obtain some
+          skill in JavaScript/TypeScript, Python, Rust with modern front-end
+          frameworks.
         </motion.p>
         <motion.p
           variants={fadeIn("left", "spring", 2, 2, 0)}
-          className="mt-4 text-secondary text-xl md:text-3xl max-2-3xl leading-[30px]"
+          className="mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]"
           initial="hidden"
           animate="show"
         >
-          Hold an AWS Certified Solutions Architect Associate certificate with
-          strong cloud knowledge, currently focused on expanding my skills in AI
-          integration and web development.
+          Focused on expanding my skills in AI integration and web development.
+          Contact via Instagram(cloki0610) or email(cloki0610@gmail.com).
         </motion.p>
       </div>
     </div>

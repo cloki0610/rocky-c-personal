@@ -1,5 +1,5 @@
 const menuItem = [
-  { name: "Office Arena", url: "/office-chess" },
+  { name: "Office Arena", url: "/office-arena" },
   { name: "About", url: "/about" },
 ];
 
