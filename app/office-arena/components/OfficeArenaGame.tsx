@@ -64,7 +64,7 @@ const OfficeArenaGame = () => {
             onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-md transition-colors"
           >
-            Open Modal
+            Instruction
           </button>
         </div>
         <ArenaGameState gameStatus={gameStatus} round={roundCount} />
