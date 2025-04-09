@@ -23,8 +23,6 @@ export default function RootLayout({
         <body className={inter.className}>
           <SiteMenu />
           {children}
-          <footer>
-          </footer>
         </body>
       </html>
     </ViewTransitions>
