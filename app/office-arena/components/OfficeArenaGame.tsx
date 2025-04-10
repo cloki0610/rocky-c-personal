@@ -6,8 +6,9 @@ import ArenaInstructions from "./ArenaInstructions";
 import ArenaBoard from "./ArenaBoard";
 import ArenaGameState from "./ArenaGameState";
 import BoardSelectBox from "./BoardSelect";
-import useOfficeArena from "../hooks/useOfficeArena";
+import BoardButton from "./BoardButton";
 import Modal from "@/app/components/Modal";
+import useOfficeArena from "../hooks/useOfficeArena";
 import { fadeIn } from "@/app/utils/motion";
 
 const OfficeArenaGame = () => {
@@ -54,18 +55,10 @@ const OfficeArenaGame = () => {
             handleChange={adjustSquareSize}
             boxType="square"
           />
-          <button
-            onClick={initializeBoard}
-            className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-md transition-colors"
-          >
-            Reset Game
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-md transition-colors"
-          >
+          <BoardButton onClick={initializeBoard}>Reset Game</BoardButton>
+          <BoardButton onClick={() => setIsModalOpen(true)}>
             Instruction
-          </button>
+          </BoardButton>
         </div>
         <ArenaGameState gameStatus={gameStatus} round={roundCount} />
         <ArenaBoard

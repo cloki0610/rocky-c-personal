@@ -12,7 +12,7 @@ const BoardSelectBox = ({
   boxType
 }: BoardSelectBoxProps) => {
   return (
-    <div>
+    <>
       <label className="mr-2">Board Size:</label>
       <select
         value={initSize}
@@ -25,7 +25,7 @@ const BoardSelectBox = ({
           </option>
         ))}
       </select>
-    </div>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ const AboutContent = () => {
     <div>
       <motion.p
         variants={fadeIn("down", "spring", 1, 2, 0)}
-        className="mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]"
+        className="mt-4 text-xl md:text-2xl max-2-3xl leading-[30px]"
         initial="hidden"
         animate="show"
       >
@@ -18,7 +18,7 @@ const AboutContent = () => {
       </motion.p>
       <motion.p
         variants={fadeIn("left", "spring", 1.5, 2, 0)}
-        className="mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]"
+        className="mt-4 text-xl md:text-2xl max-2-3xl leading-[30px]"
         initial="hidden"
         animate="show"
       >
@@ -26,7 +26,7 @@ const AboutContent = () => {
         <br />
         Contact via Instagram(cloki0610) or email(cloki0610@gmail.com).
       </motion.p>
-      <p className="flex gap-[36px] mt-4 text-secondary text-xl md:text-2xl max-2-3xl leading-[30px]">
+      <p className="flex gap-[36px] mt-4 text-xl md:text-2xl max-2-3xl leading-[30px]">
         <motion.a
           variants={fadeIn("right", "spring", 2.5, 2, 0)}
           initial="hidden"
