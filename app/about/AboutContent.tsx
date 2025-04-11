@@ -5,7 +5,7 @@ import { fadeIn } from "../utils/motion";
 
 const AboutContent = () => {
   return (
-    <div>
+    <>
       <motion.p
         variants={fadeIn("down", "spring", 1, 2, 0)}
         className="mt-4 text-xl md:text-2xl max-2-3xl leading-[30px]"
@@ -58,7 +58,7 @@ const AboutContent = () => {
           <Image src="/email.svg" alt="My Email" width={50} height={50} />
         </motion.a>
       </p>
-    </div>
+    </>
   );
 };
 

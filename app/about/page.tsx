@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const AboutPage = () => {
   return (
-    <main className="sm:px-16 px-6 absolute inset-0 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-5 pt-[150px] lg:pt-0">
+    <main className="sm:px-16 h-80 px-6 max-w-7xl mx-auto flex flex-col justify-center gap-5 pt-50">
       <AboutContent />
     </main>
   );
