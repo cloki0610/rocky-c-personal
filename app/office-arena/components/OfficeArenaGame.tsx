@@ -13,7 +13,7 @@ import { fadeIn } from "@/app/utils/motion";
 
 const OfficeArenaGame = () => {
   const [boardSize, setBoardSize] = useState<number>(9);
-  const [squareSize, setSquareSize] = useState<number>(60);
+  const [squareSize, setSquareSize] = useState<number>(40);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {
     board,
@@ -43,22 +43,10 @@ const OfficeArenaGame = () => {
         className="flex flex-col items-center p-4 max-w-full"
       >
         <div className="mb-4 flex space-x-4">
-          <BoardSelectBox
-            initSize={boardSize}
-            options={[5, 6, 7, 8, 9, 10]}
-            handleChange={resizeBoard}
-            boxType="board"
-          />
-          <BoardSelectBox
-            initSize={squareSize}
-            options={[40, 50, 60, 70, 80]}
-            handleChange={adjustSquareSize}
-            boxType="square"
-          />
-          <BoardButton onClick={initializeBoard}>Reset Game</BoardButton>
           <BoardButton onClick={() => setIsModalOpen(true)}>
             Instruction
           </BoardButton>
+          <BoardButton onClick={initializeBoard}>Reset</BoardButton>
         </div>
         <ArenaGameState gameStatus={gameStatus} round={roundCount} />
         <ArenaBoard
@@ -68,6 +56,22 @@ const OfficeArenaGame = () => {
           isValidMove={isValidMove}
           handleSquareClick={handleSquareClick}
         />
+        <div className="mt-4 flex space-x-4">
+          <BoardSelectBox
+            title="Board Size: "
+            initSize={boardSize}
+            options={[5, 6, 7, 8, 9, 10]}
+            handleChange={resizeBoard}
+            boxType="board"
+          />
+          <BoardSelectBox
+            title="Square Size: "
+            initSize={squareSize}
+            options={[40, 50, 60, 70, 80]}
+            handleChange={adjustSquareSize}
+            boxType="square"
+          />
+        </div>
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

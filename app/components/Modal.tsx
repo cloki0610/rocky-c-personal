@@ -44,6 +44,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
+          {/* Blackdrop */}
           <motion.div
             className="fixed inset-0 bg-black"
             initial={{ opacity: 0 }}
@@ -58,7 +59,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             animate="show"
             exit="hidden"
           >
-            <div className="flex items-center justify-between p-4 border-b bg-gray-800 text-white">
+            <div className="flex items-center justify-between p-4 border-b bg-black text-white">
               <motion.h2
                 className="text-xl font-semibold"
                 initial={{ opacity: 0, x: -20 }}
@@ -69,7 +70,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               </motion.h2>
               <motion.button
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 transition-colors text-xl font-bold h-8 w-8 flex items-center justify-center"
+                className="text-gray-500 hover:opacity-80 transition-opacity text-xl font-bold h-8 w-8 flex items-center justify-center"
                 aria-label="Close"
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
@@ -88,14 +89,14 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             </motion.div>
 
             <motion.div
-              className="p-4 border-t flex justify-end"
+              className="p-4 flex justify-end"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.5 }}
             >
               <motion.button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-600 transition-colors"
+                className="px-4 py-2 bg-black rounded-md text-white hover:opacity-80 transition-opacity"
               >
                 Close
               </motion.button>

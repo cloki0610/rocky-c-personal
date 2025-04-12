@@ -29,7 +29,6 @@ const useOfficeArena = (boardSize: number) => {
   const [staffLoc, setStaffLoc] = useState<StaffLocation[]>([]); // Track staff age for promotion
   const [gameOver, setGameOver] = useState<boolean>(false);
   const seniorStaffCount = staffLoc.filter((loc) => loc.age >= 2).length;
-  console.log(seniorStaffCount);
   // Initilize a new game board and reset the status
   const initializeBoard = useCallback(() => {
     const newBoard = Array(boardSize)
@@ -211,7 +210,6 @@ const useOfficeArena = (boardSize: number) => {
         const newStaffLocations = staffLoc.filter(
           (loc) => loc.row !== toRow || loc.col !== toCol
         );
-        console.log(newStaffLocations);
         setStaffLoc(newStaffLocations);
         setCountPiece((prevCount) => ({
           ...prevCount,
@@ -328,9 +326,6 @@ const useOfficeArena = (boardSize: number) => {
     // Check for a tie - if boss and manager can't capture each other or move
     const bossCanMoveOrCapture = checkIfPieceTypeCanMove("boss");
     const managerCanMoveOrCapture = checkIfPieceTypeCanMove("manager");
-
-    console.log("Boss can move or capture:", bossCanMoveOrCapture);
-    console.log("Manager can move or capture:", managerCanMoveOrCapture);
 
     if (!bossCanMoveOrCapture && !managerCanMoveOrCapture) {
       setGameStatus("Game Over! Tie! Staff wins!");

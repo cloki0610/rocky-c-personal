@@ -1,4 +1,5 @@
 interface BoardSelectBoxProps {
+  title: string;
   initSize: number;
   options: number[];
   handleChange: (newSize: number) => void;
@@ -6,6 +7,7 @@ interface BoardSelectBoxProps {
 }
 
 const BoardSelectBox = ({
+  title,
   initSize,
   options,
   handleChange,
@@ -13,11 +15,11 @@ const BoardSelectBox = ({
 }: BoardSelectBoxProps) => {
   return (
     <>
-      <label className="mr-2">Board Size:</label>
+      <label className="mr-2">{title}</label>
       <select
         value={initSize}
         onChange={(e) => handleChange(Number(e.target.value))}
-        className="border p-1"
+        className="border p-1 w-22 rounded-md"
       >
         {options.map((size) => (
           <option key={size} value={size}>

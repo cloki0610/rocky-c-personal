@@ -1,6 +1,6 @@
 const ArenaInstructions = () => {
   return (
-    <div className="text-sm">
+    <>
       <h3 className="font-bold">Game Rules:</h3>
       <ul className="list-disc pl-5">
         <li>
@@ -33,7 +33,7 @@ const ArenaInstructions = () => {
           </ul>
         </li>
       </ul>
-    </div>
+    </>
   );
 };
 
