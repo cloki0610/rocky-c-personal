@@ -6,7 +6,7 @@ const ArenaInstructions = () => {
         <li>
           Boss (Player A): Moves one square orthogonally (no diagonals). Can
           capture Junior Staff. Can capture Senior Staff if less than 3 Senior
-          on board. Can capture the last Manager to win.
+          on board. Can capture the Manager to win.
         </li>
         <li>
           Manager (Player B): Moves one square orthogonally (no diagonals). Can
@@ -28,7 +28,7 @@ const ArenaInstructions = () => {
             </li>
             <li>
               Staff wins if there&apos;s a tie (Boss and Manager can&apos;t
-              capture each other).
+              capture each other) or more than selected senior on board.
             </li>
           </ul>
         </li>

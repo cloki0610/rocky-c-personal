@@ -3,7 +3,7 @@ interface BoardSelectBoxProps {
   initSize: number;
   options: number[];
   handleChange: (newSize: number) => void;
-  boxType: "board" | "square"
+  boxType: "board" | "square" | "staffCount";
 }
 
 const BoardSelectBox = ({
@@ -11,19 +11,23 @@ const BoardSelectBox = ({
   initSize,
   options,
   handleChange,
-  boxType
+  boxType,
 }: BoardSelectBoxProps) => {
   return (
     <>
-      <label className="mr-2">{title}</label>
+      <label className="mr-1">{title}</label>
       <select
         value={initSize}
         onChange={(e) => handleChange(Number(e.target.value))}
-        className="border p-1 w-22 rounded-md"
+        className="border p-1 lg:p-0 w-full lg:w-22 rounded-md"
       >
         {options.map((size) => (
           <option key={size} value={size}>
-            {boxType === "board" ? `${size} x ${size}` : `${size}px`}
+            {boxType === "board"
+              ? `${size} x ${size}`
+              : boxType === "square"
+              ? `${size}px`
+              : `${size}`}
           </option>
         ))}
       </select>

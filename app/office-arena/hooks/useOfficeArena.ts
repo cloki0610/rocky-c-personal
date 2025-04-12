@@ -10,7 +10,7 @@ import type {
 } from "../interfaces/OfficeAreanaTypes";
 import { isOccupiedBySamePlayer, isValidPosition } from "../utils/hooks";
 
-const useOfficeArena = (boardSize: number) => {
+const useOfficeArena = (boardSize: number, staffCountTarget: number) => {
   // Game states
   const [board, setBoard] = useState<GameBoard>([]);
   const [selectedPiece, setSelectedPiece] = useState<[number, number] | null>(
@@ -104,15 +104,18 @@ const useOfficeArena = (boardSize: number) => {
       const countStaff = board
         .flat()
         .filter((piece) => piece?.type === "staff").length;
-      setCountPiece({ ...countPiece, staff: countPiece.staff + 1 });
-      placeAndIncreaseStaffAge({ row, col, age: 0 });
+      setCountPiece((prevCountPiece) => ({
+        ...prevCountPiece,
+        staff: countPiece.staff + 1,
+      }));
+      const newSeniorCount = placeAndIncreaseStaffAge({ row, col, age: 0 });
       setRoundCount((prevCount) => prevCount + 1);
       setCountPiece({
         boss: countBoss,
         manager: countManager,
         staff: countStaff + 1,
       });
-      const isTie = checkTieConditions();
+      const isTie = checkTieConditions(newSeniorCount);
       if (!isTie) {
         setCurrentPlayer("A");
         setGameStatus("Waiting for Player A (Boss) to move");
@@ -268,9 +271,7 @@ const useOfficeArena = (boardSize: number) => {
     // Handle turn logic
     if (piece && piece.type === "boss") {
       setCurrentPlayer("B");
-      setGameStatus(
-        "Waiting for Player B (Manager) to move."
-      );
+      setGameStatus("Waiting for Player B (Manager) to move.");
     } else if (piece && piece.type === "manager") {
       setCurrentPlayer("C");
       setGameStatus("Player C can place a Staff member.");
@@ -298,6 +299,7 @@ const useOfficeArena = (boardSize: number) => {
     newStaffLoc = [...newStaffLoc, { row, col, age }];
     setStaffLoc(newStaffLoc);
     setBoard(newBoard);
+    return newStaffLoc.filter((loc) => loc.age >= 2).length;
   };
 
   const checkWinConditions = () => {
@@ -319,7 +321,7 @@ const useOfficeArena = (boardSize: number) => {
     }
   };
 
-  const checkTieConditions = () => {
+  const checkTieConditions = (newSeniorCount: number) => {
     // Prevent null reference errors by checking game state before proceeding
     if (gameOver) return true;
 
@@ -327,6 +329,15 @@ const useOfficeArena = (boardSize: number) => {
     const bossCanMoveOrCapture = checkIfPieceTypeCanMove("boss");
     const managerCanMoveOrCapture = checkIfPieceTypeCanMove("manager");
 
+    // If there are more than 3 senior staff, game is over and staff wins.
+    if (newSeniorCount >= staffCountTarget) {
+      setGameStatus(
+        `Game Over! ${staffCountTarget} Senior Staffs on board! Staff wins!`
+      );
+      setGameOver(true);
+      return true;
+    }
+    // If the game is a tie, game is over and staff wins.
     if (!bossCanMoveOrCapture && !managerCanMoveOrCapture) {
       setGameStatus("Game Over! Tie! Staff wins!");
       setGameOver(true);

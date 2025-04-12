@@ -10,7 +10,7 @@ const ArenaGameState = ({ gameStatus, round }: ArenaGameStateProps) => {
     <div className="mb-4">
       <div className="font-bold">{gameStatus}</div>
       <div className="font-bold">Round: {round}</div>
-      <div className="flex space-x-4 mt-2">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="flex flex-col lg:flex-row">
           <Image
             src="/boss.svg"
@@ -47,14 +47,14 @@ const ArenaGameState = ({ gameStatus, round }: ArenaGameStateProps) => {
             alt="Senior Staff"
             width={20}
             height={20}
-            className="mx-2"
+            className="mr-2"
           />{" "}
           Senior Staff: Player C
         </div>
       </div>
       <div className="mt-2">
         <div className="font-semibold">
-          Turn Order: Boss &gt; Manager &gt; Boss &gt; Staff Placement
+        Turn Order: Boss &gt; Manager &gt; Staff Placement
         </div>
       </div>
     </div>

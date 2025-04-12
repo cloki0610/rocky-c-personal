@@ -15,6 +15,7 @@ const OfficeArenaGame = () => {
   const [boardSize, setBoardSize] = useState<number>(9);
   const [squareSize, setSquareSize] = useState<number>(40);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [staffCountTarget, setStaffCountTarget] = useState<number>(3);
   const {
     board,
     roundCount,
@@ -23,14 +24,21 @@ const OfficeArenaGame = () => {
     initializeBoard,
     handleSquareClick,
     isValidMove,
-  } = useOfficeArena(boardSize);
+  } = useOfficeArena(boardSize, staffCountTarget);
 
   const resizeBoard = (newSize: number) => {
     setBoardSize(newSize);
+    initializeBoard();
   };
 
   const adjustSquareSize = (newSize: number) => {
     setSquareSize(newSize);
+    initializeBoard();
+  };
+
+  const adjustStaffCountTarget = (newCount: number) => {
+    setStaffCountTarget(newCount);
+    initializeBoard();
   };
 
   return (
@@ -56,7 +64,7 @@ const OfficeArenaGame = () => {
           isValidMove={isValidMove}
           handleSquareClick={handleSquareClick}
         />
-        <div className="mt-4 flex space-x-4">
+        <div className="mt-4 flex flex-col lg:flex-row w-full lg:w-auto gap-2">
           <BoardSelectBox
             title="Board Size: "
             initSize={boardSize}
@@ -70,6 +78,13 @@ const OfficeArenaGame = () => {
             options={[40, 50, 60, 70, 80]}
             handleChange={adjustSquareSize}
             boxType="square"
+          />
+          <BoardSelectBox
+            title="Staff Count to Win: "
+            initSize={staffCountTarget}
+            options={[3, 4, 5, 6, 7, 8, 9, 10]}
+            handleChange={adjustStaffCountTarget}
+            boxType="staffCount"
           />
         </div>
         <Modal
