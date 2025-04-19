@@ -1,15 +1,13 @@
 import Image from "next/image";
 
-interface ArenaGameStateProps {
-  gameStatus: string;
-  round: number;
-}
+import { useArena } from "../context/ArenaContext";
 
-const ArenaGameState = ({ gameStatus, round }: ArenaGameStateProps) => {
+const ArenaGameState = () => {
+  const { roundCount, gameStatus } = useArena();
   return (
-    <div className="mb-4">
+    <>
       <div className="font-bold text-center">{gameStatus}</div>
-      <div className="font-bold text-center">Round: {round}</div>
+      <div className="font-bold text-center">Round: {roundCount}</div>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="flex flex-col lg:flex-row">
           <Image
@@ -54,10 +52,10 @@ const ArenaGameState = ({ gameStatus, round }: ArenaGameStateProps) => {
       </div>
       <div className="mt-2">
         <div className="font-semibold">
-        Turn Order: Boss &gt; Manager &gt; Staff Placement
+          Turn Order: Boss &gt; Manager &gt; Staff Placement
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

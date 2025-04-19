@@ -1,4 +1,5 @@
 "use client";
+import { unstable_ViewTransition as ViewTransition } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "./utils/motion";
 
@@ -14,7 +15,9 @@ export default function Home() {
             lg:leading-[98px] mt-2 select-none"
         >
           Hi, I&apos;m{" "}
-          <span className="text-[#8d6e63] site-title">Rocky.C</span>
+          <ViewTransition name="site-title">
+            <span className="text-[#8d6e63]">Rocky.C</span>
+          </ViewTransition>
         </motion.h1>
         <motion.p
           variants={fadeIn("left", "spring", 0.5, 2)}

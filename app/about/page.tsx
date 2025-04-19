@@ -1,5 +1,6 @@
-import AboutContent from "./AboutContent";
 import type { Metadata } from "next/types";
+
+import AboutContent from "./components/AboutContent";
 
 export const metadata: Metadata = {
   title: "Rocky.C - About Me",

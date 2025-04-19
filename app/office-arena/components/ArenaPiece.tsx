@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import type { Piece } from "../interfaces/OfficeAreanaTypes";
 
 interface ArenaPieceProps {

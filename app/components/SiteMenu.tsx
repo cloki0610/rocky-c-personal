@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, unstable_ViewTransition as ViewTransition } from "react";
 import { usePathname } from "next/navigation";
-import { Link } from "next-view-transitions";
+import Link from 'next/link'
 import { AnimatePresence, motion } from "framer-motion";
 
-import menuItem from "../utils/menu";
 import SiteLogo from "./SiteLogo";
+import menuItem from "../utils/menu";
 
 const SiteMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,9 +28,11 @@ const SiteMenu = () => {
             >
               <SiteLogo />
               {path !== "/" && (
-                <span className="text-3xl text-[#8d6e63] font-bold site-title">
-                  Rocky.C
-                </span>
+                <ViewTransition name="site-title">
+                  <span className="text-3xl text-[#8d6e63] font-bold">
+                    Rocky.C
+                  </span>
+                </ViewTransition>
               )}
             </Link>
           </div>

@@ -1,6 +1,8 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
+import Modal from "../components/Modal";
+
 interface ModalContextType {
   isOpen: boolean;
   title: string;
@@ -31,6 +33,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       value={{ isOpen, title, content, openModal, closeModal }}
     >
       {children}
+      <Modal />
     </ModalContext.Provider>
   );
 };

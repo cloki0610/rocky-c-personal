@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
+import { isOccupiedBySamePlayer, isValidPosition } from "../utils/hooks";
 import type {
   GameBoard,
   Player,
@@ -8,9 +9,11 @@ import type {
   Piece,
   PlayerCount,
 } from "../interfaces/OfficeAreanaTypes";
-import { isOccupiedBySamePlayer, isValidPosition } from "../utils/hooks";
 
-const useOfficeArena = (boardSize: number, staffCountTarget: number) => {
+const useOfficeArena = (
+  initBoardSize: number,
+  initStaffCountTarget: number
+) => {
   // Game states
   const [board, setBoard] = useState<GameBoard>([]);
   const [selectedPiece, setSelectedPiece] = useState<[number, number] | null>(
@@ -28,6 +31,9 @@ const useOfficeArena = (boardSize: number, staffCountTarget: number) => {
   );
   const [staffLoc, setStaffLoc] = useState<StaffLocation[]>([]); // Track staff age for promotion
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [boardSize, setBoardSize] = useState<number>(initBoardSize);
+  const [staffCountTarget, setStaffCountTarget] =
+    useState<number>(initStaffCountTarget);
   const seniorStaffCount = staffLoc.filter((loc) => loc.age >= 2).length;
   // Initilize a new game board and reset the status
   const initializeBoard = useCallback(() => {
@@ -470,9 +476,14 @@ const useOfficeArena = (boardSize: number, staffCountTarget: number) => {
     roundCount,
     selectedPiece,
     gameStatus,
+    boardSize,
+    staffCountTarget,
+    currentPlayer,
     initializeBoard,
     handleSquareClick,
     isValidMove,
+    setBoardSize,
+    setStaffCountTarget,
   };
 };
 

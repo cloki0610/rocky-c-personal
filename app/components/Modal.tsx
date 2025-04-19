@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { slideIn } from "../utils/motion";
+
 import { useModal } from "../context/ModalContext";
+import { slideIn } from "../utils/motion";
 
 const Modal = () => {
   const { isOpen, closeModal, title, content } = useModal();

@@ -1,5 +1,8 @@
-import OfficeArenaGame from "./components/OfficeArenaGame";
 import type { Metadata } from "next/types";
+
+import { ArenaProvider } from "./context/ArenaContext";
+import { ModalProvider } from "../context/ModalContext";
+import OfficeArenaGame from "./components/OfficeArenaGame";
 
 export const metadata: Metadata = {
   title: "Rocky.C - Office Arena (Prototype)",
@@ -8,12 +11,16 @@ export const metadata: Metadata = {
 or promote target amount of pieces.",
 };
 
-const OfficeChessPage = () => {
+const OfficeArenaPage = () => {
   return (
     <main className="flex flex-col items-center p-4">
-      <OfficeArenaGame />
+      <ArenaProvider>
+        <ModalProvider>
+          <OfficeArenaGame />
+        </ModalProvider>
+      </ArenaProvider>
     </main>
   );
 };
 
-export default OfficeChessPage;
+export default OfficeArenaPage;

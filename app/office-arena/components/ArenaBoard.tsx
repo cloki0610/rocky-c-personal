@@ -1,30 +1,16 @@
+import { useArena } from "../context/ArenaContext";
 import ArenaPiece from "./ArenaPiece";
-import type {
-  GameBoard,
-  Piece,
-} from "../interfaces/OfficeAreanaTypes";
 
-interface ArenaBoardProps {
-  board: GameBoard;
-  squareSize: number;
-  selectedPiece: [number, number] | null;
-  isValidMove: (
-    piece: Piece,
-    fromRow: number,
-    fromCol: number,
-    toRow: number,
-    toCol: number
-  ) => boolean;
-  handleSquareClick: (row: number, col: number) => void;
-}
+const ArenaBoard = () => {
+  const {
+    board,
+    selectedPiece,
+    squareSize,
+    currentPlayer,
+    handleSquareClick,
+    isValidMove,
+  } = useArena();
 
-const ArenaBoard = ({
-  board,
-  squareSize,
-  selectedPiece,
-  isValidMove,
-  handleSquareClick,
-}: ArenaBoardProps) => {
   return (
     <div className="mb-4">
       {board.map((row, rowIndex) => (
@@ -44,13 +30,18 @@ const ArenaBoard = ({
                 selectedPiece[0],
                 selectedPiece[1],
                 rowIndex,
-                colIndex,
+                colIndex
               );
-            const isSenior = board[rowIndex][colIndex] && board[rowIndex][colIndex].age >= 2;
+            const isSenior =
+              board[rowIndex][colIndex] && board[rowIndex][colIndex].age >= 2;
+            const toPointer =
+              (cell?.type == "boss" && currentPlayer == "A") ||
+              (cell?.type == "manager" && currentPlayer == "B") ||
+              currentPlayer === "C" || isPossibleMove;
 
             return (
               <div
-                key={colIndex}
+                key={`${rowIndex}-${colIndex}`}
                 onClick={() => handleSquareClick(rowIndex, colIndex)}
                 style={{
                   width: `${squareSize}px`,
@@ -67,6 +58,7 @@ const ArenaBoard = ({
                   alignItems: "center",
                   fontSize: `${squareSize * 0.6}px`,
                   position: "relative",
+                  cursor: toPointer ? "pointer" : "default",
                 }}
               >
                 {cell && (
@@ -75,7 +67,7 @@ const ArenaBoard = ({
                   </div>
                 )}
                 {isPossibleMove && !cell && (
-                  <div className="w-1/3 h-1/3 rounded-full bg-green-500 opacity-50"></div>
+                  <div className="w-1/3 h-1/3 rounded-full bg-green-500 opacity-50" />
                 )}
               </div>
             );

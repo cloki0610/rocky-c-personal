@@ -22,7 +22,7 @@ const BoardSelectBox = ({
         id={title.toLowerCase()}
         value={initSize}
         onChange={(e) => handleChange(Number(e.target.value))}
-        className="border p-1 lg:p-0 w-full lg:w-22 rounded-md"
+        className="border p-3 w-full rounded"
       >
         {options.map((size) => (
           <option key={size} value={size}>
