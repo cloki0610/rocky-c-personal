@@ -3,15 +3,10 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { slideIn } from "../utils/motion";
+import { useModal } from "../context/ModalContext";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}
-
-const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+const Modal = () => {
+  const { isOpen, closeModal, title, content } = useModal();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -36,20 +31,20 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       {isOpen && (
         <motion.div
           className="fixed inset-0 flex items-center justify-center z-50"
-          onClick={(e) => {
-            // Close when clicking the backdrop (outside modal)
-            if (e.target === e.currentTarget) onClose();
-          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Blackdrop */}
+          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
+            onClick={(e) => {
+              // Close when clicking the backdrop (outside modal)
+              if (e.target === e.currentTarget) closeModal();
+            }}
           />
 
           <motion.div
@@ -69,7 +64,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 {title}
               </motion.h2>
               <motion.button
-                onClick={onClose}
+                onClick={closeModal}
                 className="text-gray-500 hover:opacity-80 transition-opacity text-xl font-bold h-8 w-8 flex items-center justify-center"
                 aria-label="Close"
                 whileHover={{ scale: 1.1, rotate: 90 }}
@@ -85,7 +80,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              {children}
+              {content}
             </motion.div>
 
             <motion.div
@@ -95,7 +90,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               transition={{ delay: 0.5 }}
             >
               <motion.button
-                onClick={onClose}
+                onClick={closeModal}
                 className="px-4 py-2 bg-black rounded-md text-white hover:opacity-80 transition-opacity"
               >
                 Close

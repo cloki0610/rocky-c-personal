@@ -8,8 +8,8 @@ interface ArenaGameStateProps {
 const ArenaGameState = ({ gameStatus, round }: ArenaGameStateProps) => {
   return (
     <div className="mb-4">
-      <div className="font-bold">{gameStatus}</div>
-      <div className="font-bold">Round: {round}</div>
+      <div className="font-bold text-center">{gameStatus}</div>
+      <div className="font-bold text-center">Round: {round}</div>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="flex flex-col lg:flex-row">
           <Image

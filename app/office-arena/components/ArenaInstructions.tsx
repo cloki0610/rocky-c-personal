@@ -1,8 +1,7 @@
 const ArenaInstructions = () => {
   return (
     <>
-      <h3 className="font-bold">Game Rules:</h3>
-      <ul className="list-disc pl-5">
+      <ul className="list-disc pl-5 text-sm lg:text-md">
         <li>
           Boss (Player A): Moves one square orthogonally (no diagonals). Can
           capture Junior Staff. Can capture Senior Staff if less than 3 Senior

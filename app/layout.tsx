@@ -3,7 +3,9 @@ import { ViewTransitions } from "next-view-transitions";
 import type { Metadata } from "next";
 
 import SiteMenu from "./components/SiteMenu";
+import { ModalProvider } from "@/app/context/ModalContext";
 import "./globals.css";
+import Modal from "./components/Modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +22,13 @@ export default function RootLayout({
   return (
     <ViewTransitions>
       <html lang="en">
-        <body className={inter.className}>
-          <SiteMenu />
-          {children}
-        </body>
+        <ModalProvider>
+          <body className={inter.className}>
+            <SiteMenu />
+            {children}
+          </body>
+          <Modal />
+        </ModalProvider>
       </html>
     </ViewTransitions>
   );

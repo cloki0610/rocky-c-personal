@@ -2,20 +2,20 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useModal } from "@/app/context/ModalContext";
 import ArenaInstructions from "./ArenaInstructions";
 import ArenaBoard from "./ArenaBoard";
 import ArenaGameState from "./ArenaGameState";
 import BoardSelectBox from "./BoardSelect";
 import BoardButton from "./BoardButton";
-import Modal from "@/app/components/Modal";
 import useOfficeArena from "../hooks/useOfficeArena";
 import { fadeIn } from "@/app/utils/motion";
 
 const OfficeArenaGame = () => {
   const [boardSize, setBoardSize] = useState<number>(9);
   const [squareSize, setSquareSize] = useState<number>(40);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [staffCountTarget, setStaffCountTarget] = useState<number>(3);
+  const { openModal } = useModal();
   const {
     board,
     roundCount,
@@ -51,12 +51,13 @@ const OfficeArenaGame = () => {
         className="flex flex-col items-center p-4 max-w-full"
       >
         <div className="mb-4 flex space-x-4">
-          <BoardButton onClick={() => setIsModalOpen(true)}>
+          <BoardButton
+            onClick={() => openModal("Instructions", <ArenaInstructions />)}
+          >
             Instruction
           </BoardButton>
           <BoardButton onClick={initializeBoard}>Reset</BoardButton>
         </div>
-        <ArenaGameState gameStatus={gameStatus} round={roundCount} />
         <ArenaBoard
           board={board}
           squareSize={squareSize}
@@ -64,6 +65,7 @@ const OfficeArenaGame = () => {
           isValidMove={isValidMove}
           handleSquareClick={handleSquareClick}
         />
+        <ArenaGameState gameStatus={gameStatus} round={roundCount} />
         <div className="mt-4 flex flex-col lg:flex-row w-full lg:w-auto gap-2">
           <BoardSelectBox
             title="Board Size: "
@@ -87,13 +89,6 @@ const OfficeArenaGame = () => {
             boxType="staffCount"
           />
         </div>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Instruction"
-        >
-          <ArenaInstructions />
-        </Modal>
       </motion.div>
     </AnimatePresence>
   );

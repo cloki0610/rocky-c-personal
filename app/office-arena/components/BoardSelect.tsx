@@ -15,8 +15,11 @@ const BoardSelectBox = ({
 }: BoardSelectBoxProps) => {
   return (
     <>
-      <label className="mr-1">{title}</label>
+      <label htmlFor={title.toLowerCase()} className="mr-1">
+        {title}
+      </label>
       <select
+        id={title.toLowerCase()}
         value={initSize}
         onChange={(e) => handleChange(Number(e.target.value))}
         className="border p-1 lg:p-0 w-full lg:w-22 rounded-md"
