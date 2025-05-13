@@ -380,8 +380,7 @@ const useOfficeArena = (
     while (queue.length > 0) {
       const [currentRow, currentCol, depth] = queue.shift()!;
 
-      // Check if we've reached max depth
-      if (depth >= maxDepth) {
+      if (depth > maxDepth) {
         continue;
       }
 
@@ -449,7 +448,8 @@ const useOfficeArena = (
       }
     }
 
-    // Check if any piece can find a complete path to capture any target
+    // Create a Set of positions reachable from each piece
+    const reachablePositions = new Set<string>();
     for (const [pieceRow, pieceCol, piece] of pieces) {
       for (const [targetRow, targetCol] of targets) {
         if (
@@ -463,8 +463,15 @@ const useOfficeArena = (
             maxDepth
           )
         ) {
-          return true; // A valid path exists
+          reachablePositions.add(`${targetRow},${targetCol}`);
         }
+      }
+    }
+
+    // Check if any target is reachable from any piece
+    for (const [targetRow, targetCol] of targets) {
+      if (reachablePositions.has(`${targetRow},${targetCol}`)) {
+        return true; // A valid path exists
       }
     }
 
