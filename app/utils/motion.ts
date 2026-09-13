@@ -5,7 +5,7 @@ export const fadeIn = (
   type: Transition["type"],
   delay: number,
   duration: number,
-  bounce = 0.75
+  bounce = 0.75,
 ): Variants => {
   return {
     hidden: {
@@ -61,7 +61,7 @@ export const slideIn = (
   direction: string,
   type: Transition["type"],
   delay: number,
-  duration: number
+  duration: number,
 ): Variants => {
   return {
     hidden: {

@@ -1,4 +1,9 @@
-import type { ClassId, EnemyConfig, EnemyType, FighterClass } from "../interfaces/EndlessArenaTypes";
+import type {
+  ClassId,
+  EnemyConfig,
+  EnemyType,
+  FighterClass,
+} from "../interfaces/EndlessArenaTypes";
 
 /* ---------------- constants ---------------- */
 export const WORLD_W: number = 2400;
@@ -69,9 +74,40 @@ export const CLASSES: Record<ClassId, FighterClass> = {
 export const CLASS_LIST = [CLASSES.warrior, CLASSES.ranger];
 
 export const TYPES: Record<EnemyType, EnemyConfig> = {
-  minion: { size: 30, speed: 95, hp: 30, dmg: 8, cd: 900, reach: 42, color: "#ef4444" },
-  buffed: { size: 44, speed: 138, hp: 70, dmg: 15, cd: 800, reach: 54, color: "#a855f7" },
-  boss: { size: 66, speed: 84, hp: 260, dmg: 18, cd: 1000, reach: 78, color: "#f97316" },
+  minion: {
+    size: 30,
+    speed: 95,
+    hp: 30,
+    dmg: 8,
+    cd: 900,
+    reach: 42,
+    color: "#ef4444",
+  },
+  buffed: {
+    size: 44,
+    speed: 138,
+    hp: 70,
+    dmg: 15,
+    cd: 800,
+    reach: 54,
+    color: "#a855f7",
+  },
+  boss: {
+    size: 66,
+    speed: 84,
+    hp: 260,
+    dmg: 18,
+    cd: 1000,
+    reach: 78,
+    color: "#f97316",
+  },
 };
 
-export const TRACKED_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "a", "s"];
+export const TRACKED_KEYS = [
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "a",
+  "s",
+];

@@ -1,4 +1,5 @@
 "use client";
+import { ViewTransition } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "./utils/motion";
 
@@ -8,13 +9,15 @@ export default function Home() {
       <div>
         <motion.h1
           variants={fadeIn("left", "spring", 0, 1)}
-          initial="hidden"
+          initial={false}
           animate="show"
-          className="font-black text-black text-[60px] lg:text-[80px]
+          className="font-black text-black text-[40px] md:text-[60px] lg:text-[80px]
             lg:leading-[98px] mt-2 select-none"
         >
           Hi, I&apos;m{" "}
-          <span style={{ viewTransitionName: "site-title" }} className="text-[#8d6e63]">Rocky.C</span>
+          <ViewTransition name="site-title">
+            <span className="inline-block text-[#8d6e63]">Rocky.C</span>
+          </ViewTransition>
         </motion.h1>
         <motion.p
           variants={fadeIn("left", "spring", 0.5, 2)}

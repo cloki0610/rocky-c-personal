@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, ViewTransition } from "react";
 import { usePathname } from "next/navigation";
-import Link from 'next/link'
+import { Link } from "next-transition-router";
 import { AnimatePresence, motion } from "framer-motion";
 
 import SiteLogo from "./SiteLogo";
@@ -12,7 +12,7 @@ const SiteMenu = () => {
   const path = usePathname();
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((open) => !open);
   };
 
   return (
@@ -28,9 +28,11 @@ const SiteMenu = () => {
             >
               <SiteLogo />
               {path !== "/" && (
-                  <span style={{ viewTransitionName: "site-title" }} className="text-3xl text-[#8d6e63] font-bold">
+                <ViewTransition name="site-title">
+                  <span className="text-3xl text-[#8d6e63] font-bold">
                     Rocky.C
                   </span>
+                </ViewTransition>
               )}
             </Link>
           </div>
@@ -54,11 +56,14 @@ const SiteMenu = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none 
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none
               focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-300"
-              aria-expanded="false"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-site-menu"
             >
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">
+                {isMenuOpen ? "Close" : "Open"} main menu
+              </span>
               {/* Icon when menu is closed */}
               {!isMenuOpen ? (
                 <motion.svg
@@ -107,6 +112,7 @@ const SiteMenu = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            id="mobile-site-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

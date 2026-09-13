@@ -101,7 +101,7 @@ const Modal = () => {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
 

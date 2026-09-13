@@ -18,11 +18,19 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 [data-support-yes],
 [data-support-no] {
   display: none;
 }
-
 
 @supports (view-transition-name: test) {
   [data-support] [data-support-yes] {
@@ -35,7 +43,7 @@ body {
 
 @supports not (view-transition-name: test) {
   [data-support] [data-support-yes] {
-      display: none;
+    display: none;
   }
   [data-support] [data-support-no] {
     display: inline;

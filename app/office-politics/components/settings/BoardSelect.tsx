@@ -29,8 +29,8 @@ const BoardSelectBox = ({
             {boxType === "board"
               ? `${size} x ${size}`
               : boxType === "square"
-              ? `${size}px`
-              : `${size}`}
+                ? `${size}px`
+                : `${size}`}
           </option>
         ))}
       </select>
