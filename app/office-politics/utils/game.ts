@@ -4,6 +4,8 @@ export interface PoliticsGame {
   board: GameBoard;
   boardSize: number;
   staffCountTarget: number;
+  bossRoundTarget: number;
+  managerMovesRemaining: number;
   selectedPiece: [number, number] | null;
   currentPlayer: Player;
   roundCount: number;
@@ -26,6 +28,7 @@ const turnMessage: Record<Player, string> = {
 export function createGame(
   boardSize: number,
   staffCountTarget: number,
+  bossRoundTarget: number = 10,
 ): PoliticsGame {
   if (!Number.isInteger(boardSize) || boardSize < 5 || boardSize > 10)
     throw new RangeError("Board size must be between 5 and 10.");
@@ -35,6 +38,14 @@ export function createGame(
     staffCountTarget > 10
   )
     throw new RangeError("Staff target must be between 3 and 10.");
+  if (
+    !Number.isInteger(bossRoundTarget) ||
+    bossRoundTarget < 1 ||
+    bossRoundTarget > 100
+  )
+    throw new RangeError(
+      "Boss survival target must be between 1 and 100 rounds.",
+    );
   const board: GameBoard = Array.from({ length: boardSize }, () =>
     Array(boardSize).fill(null),
   );
@@ -45,6 +56,8 @@ export function createGame(
     board,
     boardSize,
     staffCountTarget,
+    bossRoundTarget,
+    managerMovesRemaining: 0,
     selectedPiece: null,
     currentPlayer: "A",
     roundCount: 1,
@@ -57,6 +70,12 @@ export function seniorCount(board: GameBoard): number {
   return board
     .flat()
     .filter((piece) => piece?.type === "staff" && piece.age >= 2).length;
+}
+
+function statusMessage(game: PoliticsGame): string {
+  return game.currentPlayer === "B"
+    ? `${turnMessage.B} ${game.managerMovesRemaining} move${game.managerMovesRemaining === 1 ? "" : "s"} remaining.`
+    : turnMessage[game.currentPlayer];
 }
 
 export function canMove(
@@ -120,6 +139,11 @@ function advance(game: PoliticsGame, nextPlayer: Player): PoliticsGame {
   const managerCanMove = hasLegalMove(game.board, "B");
   if (!bossCanMove && !managerCanMove)
     return finish(game, "Staff wins: neither leader has a legal move.");
+  if (game.roundCount > game.bossRoundTarget)
+    return finish(
+      game,
+      `Boss wins by surviving ${game.bossRoundTarget} rounds.`,
+    );
   let player = nextPlayer;
   let skipped = "";
   if (player === "A" && !bossCanMove) {
@@ -130,12 +154,18 @@ function advance(game: PoliticsGame, nextPlayer: Player): PoliticsGame {
     player = "C";
     skipped = "Manager has no legal move; turn skipped. ";
   }
-  return {
+  const next = {
     ...game,
     selectedPiece: null,
     currentPlayer: player,
-    gameStatus: skipped + turnMessage[player],
+    managerMovesRemaining:
+      player === "B"
+        ? game.currentPlayer === "B"
+          ? game.managerMovesRemaining
+          : 2
+        : 0,
   };
+  return { ...next, gameStatus: skipped + statusMessage(next) };
 }
 
 export function clickSquare(
@@ -172,12 +202,11 @@ export function clickSquare(
       ...game,
       selectedPiece: deselect ? null : [row, col],
       gameStatus: deselect
-        ? turnMessage[game.currentPlayer]
+        ? statusMessage(game)
         : `Selected ${target.type}. Choose a highlighted square.`,
     };
   }
-  if (!game.selectedPiece)
-    return { ...game, gameStatus: turnMessage[game.currentPlayer] };
+  if (!game.selectedPiece) return { ...game, gameStatus: statusMessage(game) };
   const [fromRow, fromCol] = game.selectedPiece;
   if (!canMove(game.board, fromRow, fromCol, row, col))
     return {
@@ -187,5 +216,10 @@ export function clickSquare(
   const board = game.board.map((line) => [...line]);
   board[row][col] = board[fromRow][fromCol];
   board[fromRow][fromCol] = null;
-  return advance({ ...game, board }, game.currentPlayer === "A" ? "B" : "C");
+  const remaining =
+    game.currentPlayer === "B" ? game.managerMovesRemaining - 1 : 0;
+  return advance(
+    { ...game, board, managerMovesRemaining: remaining },
+    game.currentPlayer === "A" || remaining > 0 ? "B" : "C",
+  );
 }

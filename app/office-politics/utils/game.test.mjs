@@ -60,6 +60,10 @@ test("turn cycle and promotions use immutable snapshots", () => {
   assert.equal(game.currentPlayer, "B");
   assert.deepEqual(original, snapshot);
   game = move(game, 4, 4, 4, 3);
+  assert.equal(game.currentPlayer, "B");
+  assert.equal(game.managerMovesRemaining, 1);
+  assert.match(game.gameStatus, /1 move remaining/);
+  game = move(game, 4, 3, 3, 3);
   assert.equal(game.currentPlayer, "C");
   game = clickSquare(game, 2, 2);
   assert.equal(game.currentPlayer, "A");
@@ -105,7 +109,7 @@ test("promotion target is checked on the new board", () => {
   assert.match(won.gameStatus, /target/);
 });
 
-test("a blocked Manager skips to Staff and both blocked leaders cause a draw", () => {
+test("a blocked Manager skips to Staff and both blocked leaders give Staff the win", () => {
   const game = fixture();
   game.board[4][3] = staff(2);
   game.board[3][4] = staff(2);
@@ -169,4 +173,87 @@ test("leaders farther than ten moves apart do not trigger a false draw", () => {
   game.board[9][9] = manager;
   game.currentPlayer = "C";
   assert.equal(clickSquare(game, 4, 4).gameOver, false);
+});
+
+test("invalid Manager input preserves both moves and the next round restores them", () => {
+  let game = move(fixture(), 0, 0, 0, 1);
+  assert.equal(game.managerMovesRemaining, 2);
+  const invalid = move(game, 4, 4, 2, 2);
+  assert.equal(invalid.managerMovesRemaining, 2);
+  assert.equal(invalid.board, game.board);
+  game = clickSquare(invalid, 4, 3);
+  assert.equal(game.managerMovesRemaining, 1);
+  game = move(game, 4, 3, 4, 4);
+  assert.equal(game.currentPlayer, "C");
+  game = clickSquare(game, 2, 2);
+  game = move(game, 0, 1, 0, 0);
+  assert.equal(game.managerMovesRemaining, 2);
+});
+
+test("Manager captures end the game on either move", () => {
+  for (const remaining of [1, 2]) {
+    const game = fixture();
+    game.currentPlayer = "B";
+    game.managerMovesRemaining = remaining;
+    game.board[0][0] = null;
+    game.board[4][3] = boss;
+    for (let c = 0; c < 3; c++) game.board[2][c] = staff(2);
+    const won = move(game, 4, 4, 4, 3);
+    assert.equal(won.gameOver, true);
+    assert.match(won.gameStatus, /Manager wins/);
+    assert.equal(won.selectedPiece, null);
+  }
+});
+
+test("Boss survival counts complete rounds and freezes finished games", () => {
+  let game = fixture();
+  game.bossRoundTarget = 1;
+  game = move(game, 0, 0, 0, 1);
+  assert.equal(game.gameOver, false);
+  game = move(game, 4, 4, 4, 3);
+  assert.equal(game.gameOver, false);
+  game = move(game, 4, 3, 4, 4);
+  assert.equal(game.gameOver, false);
+  const invalid = clickSquare(game, 0, 1);
+  assert.equal(invalid.roundCount, 1);
+  assert.equal(invalid.gameOver, false);
+  const won = clickSquare(invalid, 2, 2);
+  assert.equal(won.roundCount, 2);
+  assert.match(won.gameStatus, /Boss wins by surviving 1 rounds/);
+  assert.equal(won.gameOver, true);
+  assert.equal(won.selectedPiece, null);
+  assert.equal(clickSquare(won, 2, 3), won);
+});
+
+test("Staff target and blocked leaders take priority over survival on the final placement", () => {
+  for (const blocked of [false, true]) {
+    const game = fixture();
+    game.bossRoundTarget = 1;
+    game.currentPlayer = "C";
+    if (blocked) {
+      for (const [r, c] of [
+        [0, 1],
+        [1, 0],
+        [4, 3],
+        [3, 4],
+      ])
+        game.board[r][c] = staff(1);
+    } else {
+      game.staffCountTarget = 3;
+      for (let c = 0; c < 3; c++) game.board[2][c] = staff(1);
+    }
+    assert.match(clickSquare(game, 3, 0).gameStatus, /Staff wins/);
+  }
+});
+
+test("survival target validates boundaries and new games reset progress", () => {
+  for (const target of [0, 101, 1.5, NaN])
+    assert.throws(() => createGame(5, 3, target), RangeError);
+  for (const target of [1, 10, 100]) {
+    const game = createGame(5, 3, target);
+    assert.equal(game.bossRoundTarget, target);
+    assert.equal(game.roundCount, 1);
+    assert.equal(game.managerMovesRemaining, 0);
+    assert.equal(game.gameOver, false);
+  }
 });

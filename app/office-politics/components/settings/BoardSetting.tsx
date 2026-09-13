@@ -5,6 +5,8 @@ export default function BoardSetting() {
   const {
     boardSize,
     staffCountTarget,
+    bossRoundTarget,
+    setBossRoundTarget,
     squareSize,
     setBoardSize,
     setStaffCountTarget,
@@ -32,6 +34,13 @@ export default function BoardSetting() {
         options={[5, 6, 7, 8, 9, 10]}
         handleChange={setStaffCountTarget}
         boxType="staffCount"
+      />
+      <BoardSelectBox
+        title="Rounds for Boss to survive"
+        initSize={bossRoundTarget}
+        options={[10, 15, 20, 30, 50, 100]}
+        handleChange={setBossRoundTarget}
+        boxType="bossRounds"
       />
     </div>
   );
