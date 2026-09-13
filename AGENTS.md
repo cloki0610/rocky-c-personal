@@ -7,6 +7,7 @@ Rocky.C is a personal website and playground for frontend prototypes. It uses Ne
 - `/`: animated personal introduction.
 - `/about`: profile and contact links.
 - `/office-politics`: a local, same-device strategy game for three players.
+- `/endless-arena`: a keyboard-controlled survival game with Warrior and Ranger classes.
 
 The application currently has no API routes, database, authentication, or saved game persistence. Office Politics state lives in React memory and resets on reload.
 
@@ -20,8 +21,21 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/context/ModalContext.tsx` | Shared modal state; Office Politics currently uses inline settings and instructions |
 | `app/utils/menu.ts` | Navigation destinations |
 | `app/utils/motion.ts` | Typed, reusable Framer Motion variants |
+| `app/endless-arena/page.tsx` | Client-rendered arena using the game hook |
+| `app/endless-arena/layout.tsx` | Server layout and arena route metadata |
+| `app/endless-arena/components/character-select/` | Fighter selection and class stat pips |
+| `app/endless-arena/components/battlefield/` | Arena board, combat visuals, enemies, and particles |
+| `app/endless-arena/components/hud/` | Header, health bars, status, controls, and game-state overlays |
+| `app/endless-arena/hooks/useEndlessArena.ts` | Arena state, keyboard listeners, responsive sizing, and animation-loop lifecycle |
+| `app/endless-arena/utils/constants.ts` | Arena dimensions, fighter classes, enemy stats, and keyboard bindings |
+| `app/endless-arena/utils/game.ts` | World initialization, progression, combat, geometry, and simulation helpers |
+| `app/endless-arena/utils/keyboard.ts` | Keyboard input normalization |
+| `app/endless-arena/interfaces/EndlessArenaTypes.ts` | All custom arena types, including game state and component props |
 | `app/office-politics/page.tsx` | Server-rendered page shell, metadata, and game provider |
-| `app/office-politics/components/` | Game interface, board, pieces, settings, status, and instructions |
+| `app/office-politics/components/board/` | Interactive board and piece rendering |
+| `app/office-politics/components/settings/` | Board, square-size, and victory-target controls |
+| `app/office-politics/components/game/` | Game layout, status, and new-game button |
+| `app/office-politics/components/instructions/` | Game rules and how-to-play content |
 | `app/office-politics/context/PoliticsContext.tsx` | Exposes game state and display settings to components |
 | `app/office-politics/hooks/useOfficePolitics.ts` | React adapter around the pure game engine |
 | `app/office-politics/utils/game.ts` | Move validation, turn advancement, promotions, and outcomes |
@@ -37,6 +51,7 @@ The following commands use installed local dependencies:
 
 ```sh
 npm run dev                         # Development server on localhost:3000
+npm run format                      # Format all supported source and documentation files with Prettier
 npm run test:office-politics           # Pure game-engine regression tests
 node node_modules/typescript/bin/tsc --noEmit
 node node_modules/eslint/bin/eslint.js app

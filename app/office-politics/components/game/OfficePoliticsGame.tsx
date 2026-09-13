@@ -1,8 +1,8 @@
 "use client";
-import { usePolitics } from "../context/PoliticsContext";
-import PoliticsInstructions from "./PoliticsInstructions";
-import PoliticsBoard from "./PoliticsBoard";
-import BoardSetting from "./BoardSetting";
+import { usePolitics } from "../../context/PoliticsContext";
+import PoliticsInstructions from "../instructions/PoliticsInstructions";
+import PoliticsBoard from "../board/PoliticsBoard";
+import BoardSetting from "../settings/BoardSetting";
 import PoliticsGameState from "./PoliticsGameState";
 import BoardButton from "./BoardButton";
 

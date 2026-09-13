@@ -1,5 +1,5 @@
-import { usePolitics } from "../context/PoliticsContext";
-import { seniorCount } from "../utils/game";
+import { usePolitics } from "../../context/PoliticsContext";
+import { seniorCount } from "../../utils/game";
 
 export default function PoliticsGameState() {
   const { board, roundCount, gameStatus, currentPlayer, staffCountTarget, gameOver } = usePolitics();

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PoliticsProvider } from "./context/PoliticsContext";
-import OfficePoliticsGame from "./components/OfficePoliticsGame";
+import OfficePoliticsGame from "./components/game/OfficePoliticsGame";
 
 export const metadata: Metadata = {
   title: "Rocky.C - Office Politics",

@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+build/
+coverage/
+.yarn/
+.vercel/
+next-env.d.ts
+*.tsbuildinfo
+yarn.lock
+package-lock.json
+.env*

@@ -1,4 +1,4 @@
-import { usePolitics } from "../context/PoliticsContext";
+import { usePolitics } from "../../context/PoliticsContext";
 import PoliticsPiece from "./PoliticsPiece";
 
 export default function PoliticsBoard() {

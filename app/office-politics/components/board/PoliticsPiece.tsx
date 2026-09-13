@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Piece } from "../interfaces/OfficePoliticsTypes";
+import type { Piece } from "../../interfaces/OfficePoliticsTypes";
 
 export default function PoliticsPiece({ piece, isSenior }: { piece: Piece; isSenior: boolean }) {
   const name = piece.type === "staff" && isSenior ? "senior-staff" : piece.type;
