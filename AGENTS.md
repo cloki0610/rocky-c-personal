@@ -6,9 +6,9 @@ Rocky.C is a personal website and playground for frontend prototypes. It uses Ne
 
 - `/`: animated personal introduction.
 - `/about`: profile and contact links.
-- `/office-arena`: a local, same-device strategy game for three players.
+- `/office-politics`: a local, same-device strategy game for three players.
 
-The application currently has no API routes, database, authentication, or saved game persistence. Office Arena state lives in React memory and resets on reload.
+The application currently has no API routes, database, authentication, or saved game persistence. Office Politics state lives in React memory and resets on reload.
 
 ## Project map
 
@@ -17,16 +17,16 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/layout.tsx` | Shared layout, Inter font, site navigation, and default metadata |
 | `app/globals.css` | Tailwind import, global styles, and view-transition feature detection |
 | `app/components/` | Shared navigation, logo, and modal components |
-| `app/context/ModalContext.tsx` | Shared modal state; Office Arena currently uses inline settings and instructions |
+| `app/context/ModalContext.tsx` | Shared modal state; Office Politics currently uses inline settings and instructions |
 | `app/utils/menu.ts` | Navigation destinations |
 | `app/utils/motion.ts` | Typed, reusable Framer Motion variants |
-| `app/office-arena/page.tsx` | Server-rendered page shell, metadata, and arena provider |
-| `app/office-arena/components/` | Game interface, board, pieces, settings, status, and instructions |
-| `app/office-arena/context/ArenaContext.tsx` | Exposes game state and display settings to components |
-| `app/office-arena/hooks/useOfficeArena.ts` | React adapter around the pure game engine |
-| `app/office-arena/utils/game.ts` | Move validation, turn advancement, promotions, and outcomes |
-| `app/office-arena/utils/game.test.mjs` | Node regression tests for game rules |
-| `app/office-arena/interfaces/OfficeAreanaTypes.ts` | Shared game types; retain the existing filename spelling unless updating all imports |
+| `app/office-politics/page.tsx` | Server-rendered page shell, metadata, and game provider |
+| `app/office-politics/components/` | Game interface, board, pieces, settings, status, and instructions |
+| `app/office-politics/context/PoliticsContext.tsx` | Exposes game state and display settings to components |
+| `app/office-politics/hooks/useOfficePolitics.ts` | React adapter around the pure game engine |
+| `app/office-politics/utils/game.ts` | Move validation, turn advancement, promotions, and outcomes |
+| `app/office-politics/utils/game.test.mjs` | Node regression tests for game rules |
+| `app/office-politics/interfaces/OfficePoliticsTypes.ts` | Shared game types |
 | `public/` | SVG game pieces, social icons, and other static assets |
 
 ## Development and verification
@@ -37,7 +37,7 @@ The following commands use installed local dependencies:
 
 ```sh
 npm run dev                         # Development server on localhost:3000
-npm run test:office-arena           # Pure game-engine regression tests
+npm run test:office-politics           # Pure game-engine regression tests
 node node_modules/typescript/bin/tsc --noEmit
 node node_modules/eslint/bin/eslint.js app
 npm run build                      # Production compilation and static generation
@@ -53,9 +53,9 @@ npm run start                      # Serve the completed production build
 - No browser-test runner is declared in `package.json`; do not assume a committed end-to-end suite exists.
 - Documentation-only changes need factual and diff review, not an application rebuild.
 
-## Office Arena invariants
+## Office Politics invariants
 
-Keep `game.ts`, its tests, and `ArenaInstructions.tsx` consistent when changing rules.
+Keep `game.ts`, its tests, and `PoliticsInstructions.tsx` consistent when changing rules.
 
 - Turns run Boss (A), Manager (B), then Staff placement (C). Leaders move one square horizontally or vertically; Staff cannot move.
 - Both leaders can capture Junior Staff. The Boss can always capture the Manager and can capture Senior Staff only when fewer than three Seniors are on the board.

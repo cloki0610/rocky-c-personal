@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { createGame, clickSquare, canMove } from "../utils/game";
-import type { Piece } from "../interfaces/OfficeAreanaTypes";
+import type { Piece } from "../interfaces/OfficePoliticsTypes";
 
-export default function useOfficeArena(initBoardSize: number, initStaffCountTarget: number) {
+export default function useOfficePolitics(initBoardSize: number, initStaffCountTarget: number) {
   const [game, setGame] = useState(() => createGame(initBoardSize, initStaffCountTarget));
   return {
     ...game,

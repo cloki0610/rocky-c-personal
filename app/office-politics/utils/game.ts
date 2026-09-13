@@ -1,6 +1,6 @@
-import type { GameBoard, Player } from "../interfaces/OfficeAreanaTypes";
+import type { GameBoard, Player } from "../interfaces/OfficePoliticsTypes";
 
-export interface ArenaGame {
+export interface PoliticsGame {
   board: GameBoard;
   boardSize: number;
   staffCountTarget: number;
@@ -18,7 +18,7 @@ const turnMessage: Record<Player, string> = {
   C: "Player C: place a Junior Staff member on an empty square.",
 };
 
-export function createGame(boardSize: number, staffCountTarget: number): ArenaGame {
+export function createGame(boardSize: number, staffCountTarget: number): PoliticsGame {
   if (!Number.isInteger(boardSize) || boardSize < 5 || boardSize > 10) throw new RangeError("Board size must be between 5 and 10.");
   if (!Number.isInteger(staffCountTarget) || staffCountTarget < 3 || staffCountTarget > 10) throw new RangeError("Staff target must be between 3 and 10.");
   const board: GameBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill(null));
@@ -48,12 +48,12 @@ export function hasLegalMove(board: GameBoard, player: Player): boolean {
   return board.some((row, r) => row.some((piece, c) => piece?.player === player && directions.some(([dr, dc]) => canMove(board, r, c, r + dr, c + dc))));
 }
 
-function finish(game: ArenaGame, message: string): ArenaGame {
+function finish(game: PoliticsGame, message: string): PoliticsGame {
   return { ...game, selectedPiece: null, gameOver: true, gameStatus: `Game over! ${message}` };
 }
 
 // Resolve outcomes against the updated board, then skip a blocked leader's turn.
-function advance(game: ArenaGame, nextPlayer: Player): ArenaGame {
+function advance(game: PoliticsGame, nextPlayer: Player): PoliticsGame {
   const pieces = game.board.flat();
   if (!pieces.some(piece => piece?.type === "boss")) return finish(game, "Manager wins by capturing the Boss.");
   if (!pieces.some(piece => piece?.type === "manager")) return finish(game, "Boss wins by capturing the Manager.");
@@ -68,7 +68,7 @@ function advance(game: ArenaGame, nextPlayer: Player): ArenaGame {
   return { ...game, selectedPiece: null, currentPlayer: player, gameStatus: skipped + turnMessage[player] };
 }
 
-export function clickSquare(game: ArenaGame, row: number, col: number): ArenaGame {
+export function clickSquare(game: PoliticsGame, row: number, col: number): PoliticsGame {
   if (game.gameOver || !Number.isInteger(row) || !Number.isInteger(col) || game.board[row]?.[col] === undefined) return game;
   const target = game.board[row][col];
   if (game.currentPlayer === "C") {

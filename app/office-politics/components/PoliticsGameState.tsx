@@ -1,8 +1,8 @@
-import { useArena } from "../context/ArenaContext";
+import { usePolitics } from "../context/PoliticsContext";
 import { seniorCount } from "../utils/game";
 
-export default function ArenaGameState() {
-  const { board, roundCount, gameStatus, currentPlayer, staffCountTarget, gameOver } = useArena();
+export default function PoliticsGameState() {
+  const { board, roundCount, gameStatus, currentPlayer, staffCountTarget, gameOver } = usePolitics();
   return (
     <div className="mb-5 space-y-3">
       <div className="flex flex-wrap gap-2 text-sm">

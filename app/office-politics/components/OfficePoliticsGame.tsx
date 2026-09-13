@@ -1,13 +1,13 @@
 "use client";
-import { useArena } from "../context/ArenaContext";
-import ArenaInstructions from "./ArenaInstructions";
-import ArenaBoard from "./ArenaBoard";
+import { usePolitics } from "../context/PoliticsContext";
+import PoliticsInstructions from "./PoliticsInstructions";
+import PoliticsBoard from "./PoliticsBoard";
 import BoardSetting from "./BoardSetting";
-import ArenaGameState from "./ArenaGameState";
+import PoliticsGameState from "./PoliticsGameState";
 import BoardButton from "./BoardButton";
 
-export default function OfficeArenaGame() {
-  const { initializeBoard } = useArena();
+export default function OfficePoliticsGame() {
+  const { initializeBoard } = usePolitics();
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
       <section aria-label="Game" className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
@@ -15,8 +15,8 @@ export default function OfficeArenaGame() {
           <h2 className="text-xl font-semibold">The office floor</h2>
           <BoardButton onClick={initializeBoard}>New game</BoardButton>
         </div>
-        <ArenaGameState />
-        <ArenaBoard />
+        <PoliticsGameState />
+        <PoliticsBoard />
         <p className="mt-3 text-sm text-slate-600">Select your piece, then a highlighted square. Staff can be placed on any empty square.</p>
       </section>
       <aside className="space-y-6">
@@ -27,7 +27,7 @@ export default function OfficeArenaGame() {
         </section>
         <details className="rounded-2xl border border-slate-200 p-5" open>
           <summary className="mb-3 cursor-pointer text-lg font-semibold">How to play</summary>
-          <ArenaInstructions />
+          <PoliticsInstructions />
         </details>
       </aside>
     </div>

@@ -1,4 +1,4 @@
-export default function ArenaInstructions() {
+export default function PoliticsInstructions() {
   return (
     <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
       <li>Play on the same device. Turns run Boss (A), Manager (B), then Staff (C).</li>
