@@ -80,8 +80,8 @@ Keep `game.ts`, its tests, and `PoliticsInstructions.tsx` consistent when changi
 - Each valid Staff placement ages existing Staff by one and adds a new Junior at age zero. Staff become Senior at age two. Invalid input must not age pieces or advance the round.
 - Capturing the opposing leader wins immediately. The Boss also wins after surviving the selected number of complete rounds (1-100, default 10); a round completes after valid Staff placement. Staff target and blocked-leader wins take priority over survival on the same placement. Staff wins at the selected Senior target or when neither leader has a legal move. A single blocked leader skips their turn.
 - Determine outcomes from the updated board. Draw detection uses actual legal moves, not a bounded path search or speculative future captures.
-- Supported board sizes are 5–10; Senior targets are 3–10. Defaults are a 9×9 board, 40px squares, and a target of three.
-- The default target ends the game as soon as three Seniors exist. A higher target lets the Manager use its three-Senior capture rule before Staff wins.
+- Supported board sizes are 5–10; the engine accepts Senior targets of 3–10, and settings offer 5–10. Defaults are a 9×9 board, 40px squares, and a target of five.
+- The default target ends the game as soon as five Seniors exist, letting the Manager use its three-Senior capture rule before Staff wins.
 - Changes to board size or either victory target start a new game. Square-size changes preserve gameplay. Finished games ignore board input and clear selection.
 
 ## Change conventions

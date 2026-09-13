@@ -35,8 +35,8 @@ export default function PoliticsInstructions() {
         their turn.
       </li>
       <li>
-        The default target is three. Choose a higher target to let the Manager
-        use the three-Senior capture rule before Staff wins.
+        The default target is five, letting the Manager use the three-Senior
+        capture rule before Staff wins.
       </li>
     </ul>
   );
