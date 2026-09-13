@@ -11,7 +11,7 @@ const PoliticsContext = createContext<PoliticsContextType | undefined>(
 );
 export const PoliticsProvider = ({ children }: { children: ReactNode }) => {
   const [squareSize, setSquareSize] = useState(40);
-  const game = useOfficePolitics(9, 3);
+  const game = useOfficePolitics(9, 5);
   return (
     <PoliticsContext.Provider value={{ ...game, squareSize, setSquareSize }}>
       {children}
