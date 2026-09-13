@@ -6,12 +6,19 @@ export default function PoliticsInstructions() {
         (C).
       </li>
       <li>
-        Boss and Manager move one square horizontally or vertically. Both can
-        capture Junior Staff.
+        Each round, the Boss moves once, then the Manager makes two consecutive
+        moves, then Staff places a Junior on an empty square.
       </li>
       <li>
-        The Boss wins by capturing the Manager and can capture Senior Staff only
-        while fewer than three Seniors remain on the board.
+        Boss and Manager move one square horizontally or vertically. Both can
+        capture Junior Staff. The Boss can capture Senior Staff only while fewer
+        than three Seniors remain on the board.
+      </li>
+      <li>
+        The Boss wins by surviving the selected number of complete rounds (10 by
+        default) or capturing the Manager. A round ends after Staff placement;
+        Staff wins take priority if both sides reach their targets on that
+        placement.
       </li>
       <li>
         The Manager cannot capture Senior Staff. With at least three Seniors on

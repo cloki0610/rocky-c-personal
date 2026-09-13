@@ -5,6 +5,7 @@ export default function PoliticsGameState() {
   const {
     board,
     roundCount,
+    bossRoundTarget,
     gameStatus,
     currentPlayer,
     staffCountTarget,
@@ -15,6 +16,9 @@ export default function PoliticsGameState() {
       <div className="flex flex-wrap gap-2 text-sm">
         <span className="rounded-full bg-white px-3 py-1">
           Round {roundCount}
+        </span>
+        <span className="rounded-full bg-white px-3 py-1">
+          Boss survived: {roundCount - 1} / {bossRoundTarget} rounds
         </span>
         <span className="rounded-full bg-white px-3 py-1">
           Senior Staff: {seniorCount(board)} / {staffCountTarget}

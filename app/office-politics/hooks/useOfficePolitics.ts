@@ -13,7 +13,11 @@ export default function useOfficePolitics(
     ...game,
     initializeBoard: () =>
       setGame((previous) =>
-        createGame(previous.boardSize, previous.staffCountTarget),
+        createGame(
+          previous.boardSize,
+          previous.staffCountTarget,
+          previous.bossRoundTarget,
+        ),
       ),
     handleSquareClick: (row: number, col: number) =>
       setGame((previous) => clickSquare(previous, row, col)),
@@ -28,8 +32,16 @@ export default function useOfficePolitics(
       piece.player === game.currentPlayer &&
       canMove(game.board, fromRow, fromCol, toRow, toCol),
     setBoardSize: (size: number) =>
-      setGame((previous) => createGame(size, previous.staffCountTarget)),
+      setGame((previous) =>
+        createGame(size, previous.staffCountTarget, previous.bossRoundTarget),
+      ),
+    setBossRoundTarget: (target: number) =>
+      setGame((previous) =>
+        createGame(previous.boardSize, previous.staffCountTarget, target),
+      ),
     setStaffCountTarget: (target: number) =>
-      setGame((previous) => createGame(previous.boardSize, target)),
+      setGame((previous) =>
+        createGame(previous.boardSize, target, previous.bossRoundTarget),
+      ),
   };
 }

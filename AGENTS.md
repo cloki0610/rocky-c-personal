@@ -74,15 +74,15 @@ npm run start                      # Serve the completed production build
 
 Keep `game.ts`, its tests, and `PoliticsInstructions.tsx` consistent when changing rules.
 
-- Turns run Boss (A), Manager (B), then Staff placement (C). Leaders move one square horizontally or vertically; Staff cannot move.
+- Each round runs one Boss move (A), two consecutive Manager moves (B), then Staff placement (C). Invalid moves do not consume a move; a blocked Manager skips any remaining moves. Leaders move one square horizontally or vertically; Staff cannot move.
 - Both leaders can capture Junior Staff. The Boss can always capture the Manager and can capture Senior Staff only when fewer than three Seniors are on the board.
 - The Manager cannot capture Senior Staff and can capture the Boss only with at least three Seniors on the board.
 - Each valid Staff placement ages existing Staff by one and adds a new Junior at age zero. Staff become Senior at age two. Invalid input must not age pieces or advance the round.
-- Capturing the opposing leader wins immediately. Staff wins at the selected Senior target or when neither leader has a legal move. A single blocked leader skips their turn.
+- Capturing the opposing leader wins immediately. The Boss also wins after surviving the selected number of complete rounds (1-100, default 10); a round completes after valid Staff placement. Staff target and blocked-leader wins take priority over survival on the same placement. Staff wins at the selected Senior target or when neither leader has a legal move. A single blocked leader skips their turn.
 - Determine outcomes from the updated board. Draw detection uses actual legal moves, not a bounded path search or speculative future captures.
 - Supported board sizes are 5–10; Senior targets are 3–10. Defaults are a 9×9 board, 40px squares, and a target of three.
 - The default target ends the game as soon as three Seniors exist. A higher target lets the Manager use its three-Senior capture rule before Staff wins.
-- Board-size and victory-target changes start a new game. Square-size changes preserve gameplay. Finished games ignore board input and clear selection.
+- Changes to board size or either victory target start a new game. Square-size changes preserve gameplay. Finished games ignore board input and clear selection.
 
 ## Change conventions
 
