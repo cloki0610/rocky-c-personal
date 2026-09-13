@@ -1,8 +1,4 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
-
-import { useModal } from "@/app/context/ModalContext";
-import { fadeIn } from "@/app/utils/motion";
 import { useArena } from "../context/ArenaContext";
 import ArenaInstructions from "./ArenaInstructions";
 import ArenaBoard from "./ArenaBoard";
@@ -10,35 +6,30 @@ import BoardSetting from "./BoardSetting";
 import ArenaGameState from "./ArenaGameState";
 import BoardButton from "./BoardButton";
 
-const OfficeArenaGame = () => {
-  const { openModal } = useModal();
+export default function OfficeArenaGame() {
   const { initializeBoard } = useArena();
-
   return (
-    <AnimatePresence>
-      <motion.div
-        variants={fadeIn("right", "tween", 0.5, 1, 0.75)}
-        initial="hidden"
-        animate="show"
-        exit="hidden"
-        className="flex flex-col items-center max-w-full"
-      >
-        <div className="mb-4 flex space-x-4">
-          <BoardButton
-            onClick={() => openModal("Instructions", <ArenaInstructions />)}
-          >
-            Instruction
-          </BoardButton>
-          <BoardButton onClick={initializeBoard}>New Game</BoardButton>
-          <BoardButton onClick={() => openModal("Settings", <BoardSetting />)}>
-            Settings
-          </BoardButton>
+    <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <section aria-label="Game" className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold">The office floor</h2>
+          <BoardButton onClick={initializeBoard}>New game</BoardButton>
         </div>
-        <ArenaBoard />
         <ArenaGameState />
-      </motion.div>
-    </AnimatePresence>
+        <ArenaBoard />
+        <p className="mt-3 text-sm text-slate-600">Select your piece, then a highlighted square. Staff can be placed on any empty square.</p>
+      </section>
+      <aside className="space-y-6">
+        <section className="rounded-2xl border border-slate-200 p-5">
+          <h2 className="text-lg font-semibold">Game settings</h2>
+          <BoardSetting />
+          <p className="mt-3 text-xs text-slate-500">Changing the board or victory target starts a new game. Square size only changes the display.</p>
+        </section>
+        <details className="rounded-2xl border border-slate-200 p-5" open>
+          <summary className="mb-3 cursor-pointer text-lg font-semibold">How to play</summary>
+          <ArenaInstructions />
+        </details>
+      </aside>
+    </div>
   );
-};
-
-export default OfficeArenaGame;
+}

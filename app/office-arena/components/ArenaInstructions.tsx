@@ -1,39 +1,13 @@
-const ArenaInstructions = () => {
+export default function ArenaInstructions() {
   return (
-    <>
-      <ul className="list-disc pl-5 text-sm lg:text-md">
-        <li>
-          Boss (Player A): Moves one square orthogonally (no diagonals). Can
-          capture Junior Staff. Can capture Senior Staff if less than 3 Senior
-          on board. Can capture the Manager to win.
-        </li>
-        <li>
-          Manager (Player B): Moves one square orthogonally (no diagonals). Can
-          capture Junior Staff. Can capture the boss to win if more than 3
-          Senior on board.
-        </li>
-        <li>
-          Staff (Player C): Placed on the board each round. Promoted to Senior
-          Staff after surviving two rounds.
-        </li>
-        <li>Turn Order: Boss &gt; Manager &gt; Staff Placement</li>
-        <li>
-          Win conditions:
-          <ul className="list-disc pl-5">
-            <li>Boss wins by capturing the Manager.</li>
-            <li>
-              Manager wins by capturing the Boss when there are 3+ Senior Staff
-              on the board.
-            </li>
-            <li>
-              Staff wins if there&apos;s a tie (Boss and Manager can&apos;t
-              capture each other) or more than selected senior on board.
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </>
+    <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
+      <li>Play on the same device. Turns run Boss (A), Manager (B), then Staff (C).</li>
+      <li>Boss and Manager move one square horizontally or vertically. Both can capture Junior Staff.</li>
+      <li>The Boss wins by capturing the Manager and can capture Senior Staff only while fewer than three Seniors remain on the board.</li>
+      <li>The Manager cannot capture Senior Staff. With at least three Seniors on the board, the Manager can capture the Boss to win.</li>
+      <li>Staff places one Junior on an empty square each round. Existing Staff age after each placement and become Seniors after surviving two rounds. The newly placed Junior starts at age zero.</li>
+      <li>Staff wins when the number of Seniors reaches the selected target, or when neither leader has a legal move. A leader with no legal move skips their turn.</li>
+      <li>The default target is three. Choose a higher target to let the Manager use the three-Senior capture rule before Staff wins.</li>
+    </ul>
   );
-};
-
-export default ArenaInstructions;
+}

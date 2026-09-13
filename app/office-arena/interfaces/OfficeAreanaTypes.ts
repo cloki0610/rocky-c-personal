@@ -1,5 +1,5 @@
 export type Player = "A" | "B" | "C";
-export type PieceType = "boss" | "manager" | "staff" | "SeniorStaff";
+export type PieceType = "boss" | "manager" | "staff";
 export type GameBoard = (Piece | null)[][];
 
 export interface Piece {

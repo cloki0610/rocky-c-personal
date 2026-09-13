@@ -1,10 +1,12 @@
+import type { Transition, Variants } from "framer-motion";
+
 export const fadeIn = (
   direction: string,
-  type: string,
+  type: Transition["type"],
   delay: number,
   duration: number,
   bounce = 0.75
-) => {
+): Variants => {
   return {
     hidden: {
       x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
@@ -26,7 +28,7 @@ export const fadeIn = (
   };
 };
 
-export const zoomIn = (delay: number, duration: number) => {
+export const zoomIn = (delay: number, duration: number): Variants => {
   return {
     hidden: {
       scale: 0,
@@ -57,10 +59,10 @@ export const zoomIn = (delay: number, duration: number) => {
 
 export const slideIn = (
   direction: string,
-  type: string,
+  type: Transition["type"],
   delay: number,
   duration: number
-) => {
+): Variants => {
   return {
     hidden: {
       x: direction === "left" ? "-100%" : direction === "right" ? "100%" : 0,
@@ -79,7 +81,7 @@ export const slideIn = (
   };
 };
 
-export const navbar = {
+export const navbar: Variants = {
   show: {
     display: "block",
     opacity: 1,

@@ -1,62 +1,22 @@
-import Image from "next/image";
-
 import { useArena } from "../context/ArenaContext";
+import { seniorCount } from "../utils/game";
 
-const ArenaGameState = () => {
-  const { roundCount, gameStatus } = useArena();
+export default function ArenaGameState() {
+  const { board, roundCount, gameStatus, currentPlayer, staffCountTarget, gameOver } = useArena();
   return (
-    <>
-      <div className="font-bold text-center">{gameStatus}</div>
-      <div className="font-bold text-center">Round: {roundCount}</div>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <div className="flex flex-col lg:flex-row">
-          <Image
-            src="/boss.svg"
-            alt="Boss"
-            width={20}
-            height={20}
-            className="mr-2"
-          />{" "}
-          Boss: Player A
-        </div>
-        <div className="flex flex-col lg:flex-row">
-          <Image
-            src="/manager.svg"
-            alt="Manager"
-            width={20}
-            height={20}
-            className="mr-2"
-          />{" "}
-          Manager: Player B
-        </div>
-        <div className="flex flex-col lg:flex-row">
-          <Image
-            src="/staff.svg"
-            alt="Staff"
-            width={20}
-            height={20}
-            className="mr-2"
-          />{" "}
-          Junior Staff: Player C
-        </div>
-        <div className="flex flex-col lg:flex-row">
-          <Image
-            src="/senior-staff.svg"
-            alt="Senior Staff"
-            width={20}
-            height={20}
-            className="mr-2"
-          />{" "}
-          Senior Staff: Player C
-        </div>
+    <div className="mb-5 space-y-3">
+      <div className="flex flex-wrap gap-2 text-sm">
+        <span className="rounded-full bg-white px-3 py-1">Round {roundCount}</span>
+        <span className="rounded-full bg-white px-3 py-1">Senior Staff: {seniorCount(board)} / {staffCountTarget}</span>
       </div>
-      <div className="mt-2">
-        <div className="font-semibold">
-          Turn Order: Boss &gt; Manager &gt; Staff Placement
-        </div>
+      <p role="status" aria-live="polite" className="min-h-12 font-semibold">{gameStatus}</p>
+      <div className="flex flex-wrap gap-2 text-xs">
+        {([['A', 'Boss'], ['B', 'Manager'], ['C', 'Staff']] as const).map(([player, name]) => (
+          <span key={player} className={`rounded-lg border px-3 py-2 ${!gameOver && currentPlayer === player ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white'}`}>
+            {player}: {name}{!gameOver && currentPlayer === player ? ' · Your turn' : ''}
+          </span>
+        ))}
       </div>
-    </>
+    </div>
   );
-};
-
-export default ArenaGameState;
+}

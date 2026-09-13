@@ -1,26 +1,21 @@
-import type { Metadata } from "next/types";
-
+import type { Metadata } from "next";
 import { ArenaProvider } from "./context/ArenaContext";
-import { ModalProvider } from "../context/ModalContext";
 import OfficeArenaGame from "./components/OfficeArenaGame";
 
 export const metadata: Metadata = {
-  title: "Rocky.C - Office Arena (Prototype)",
-  description:
-    "A chess game two players move their pieces against each other, and a third player tries to cause a draw \
-or promote target amount of pieces.",
+  title: "Rocky.C - Office Arena",
+  description: "A local three-player strategy game. Play as the Boss, Manager, or Staff and compete for control of the office.",
 };
 
-const OfficeArenaPage = () => {
+export default function OfficeArenaPage() {
   return (
-    <main className="flex flex-col items-center p-4">
-      <ArenaProvider>
-        <ModalProvider>
-          <OfficeArenaGame />
-        </ModalProvider>
-      </ArenaProvider>
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+      <header className="mb-8">
+        <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">Local multiplayer · 3 players</p>
+        <h1 className="mt-2 text-4xl font-bold tracking-tight">Office Arena</h1>
+        <p className="mt-3 max-w-2xl text-slate-600">One office. Three ambitions. Capture your rival or grow a team of Senior Staff to win.</p>
+      </header>
+      <ArenaProvider><OfficeArenaGame /></ArenaProvider>
     </main>
   );
-};
-
-export default OfficeArenaPage;
+}

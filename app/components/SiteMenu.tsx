@@ -1,5 +1,5 @@
 "use client";
-import { useState, unstable_ViewTransition as ViewTransition } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from 'next/link'
 import { AnimatePresence, motion } from "framer-motion";
@@ -28,11 +28,9 @@ const SiteMenu = () => {
             >
               <SiteLogo />
               {path !== "/" && (
-                <ViewTransition name="site-title">
-                  <span className="text-3xl text-[#8d6e63] font-bold">
+                  <span style={{ viewTransitionName: "site-title" }} className="text-3xl text-[#8d6e63] font-bold">
                     Rocky.C
                   </span>
-                </ViewTransition>
               )}
             </Link>
           </div>

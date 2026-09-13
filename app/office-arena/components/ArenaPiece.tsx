@@ -1,57 +1,7 @@
 import Image from "next/image";
-
 import type { Piece } from "../interfaces/OfficeAreanaTypes";
 
-interface ArenaPieceProps {
-  piece: Piece;
-  isSenior: boolean | null;
+export default function ArenaPiece({ piece, isSenior }: { piece: Piece; isSenior: boolean }) {
+  const name = piece.type === "staff" && isSenior ? "senior-staff" : piece.type;
+  return <Image src={`/${name}.svg`} alt="" width={50} height={50} className="pointer-events-none h-4/5 w-4/5 object-contain" />;
 }
-
-const ArenaPiece = ({ piece, isSenior }: ArenaPieceProps) => {
-  if (!piece) return "";
-
-  switch (piece.type) {
-    case "boss":
-      return (
-        <Image
-          src="/boss.svg"
-          alt="Boss"
-          width={50}
-          height={50}
-          style={{ width: "auto", height: "auto" }}
-        />
-      );
-    case "manager":
-      return (
-        <Image
-          src="/manager.svg"
-          alt="Manager"
-          width={50}
-          height={50}
-          style={{ width: "auto", height: "auto" }}
-        />
-      );
-    case "staff":
-      return isSenior === true ? (
-        <Image
-          src="/senior-staff.svg"
-          alt="Senior Staff"
-          width={50}
-          height={50}
-          style={{ width: "auto", height: "auto" }}
-        />
-      ) : (
-        <Image
-          src="/staff.svg"
-          alt="Staff"
-          width={50}
-          height={50}
-          style={{ width: "auto", height: "auto" }}
-        />
-      );
-    default:
-      return "";
-  }
-};
-
-export default ArenaPiece;

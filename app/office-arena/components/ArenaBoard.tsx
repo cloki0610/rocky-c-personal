@@ -1,81 +1,38 @@
 import { useArena } from "../context/ArenaContext";
 import ArenaPiece from "./ArenaPiece";
 
-const ArenaBoard = () => {
-  const {
-    board,
-    selectedPiece,
-    squareSize,
-    currentPlayer,
-    handleSquareClick,
-    isValidMove,
-  } = useArena();
-
+export default function ArenaBoard() {
+  const { board, selectedPiece, squareSize, currentPlayer, gameOver, handleSquareClick, isValidMove } = useArena();
+  const selected = selectedPiece ? board[selectedPiece[0]][selectedPiece[1]] : null;
   return (
-    <div className="mb-4">
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex">
-          {row.map((cell, colIndex) => {
-            const isSelected =
-              selectedPiece &&
-              selectedPiece[0] === rowIndex &&
-              selectedPiece[1] === colIndex;
-            const targetSquare =
-              selectedPiece && board[selectedPiece[0]][selectedPiece[1]];
-            const isPossibleMove =
-              selectedPiece &&
-              targetSquare &&
-              isValidMove(
-                targetSquare,
-                selectedPiece[0],
-                selectedPiece[1],
-                rowIndex,
-                colIndex
+    <div className="max-w-full overflow-x-auto pb-2" aria-label="Office Arena board">
+      <div className="mx-auto w-max overflow-hidden rounded-lg border-2 border-slate-700">
+        {board.map((row, r) => (
+          <div key={r} className="flex">
+            {row.map((piece, c) => {
+              const isSelected = selectedPiece?.[0] === r && selectedPiece?.[1] === c;
+              const possible = !!(selectedPiece && selected && isValidMove(selected, selectedPiece[0], selectedPiece[1], r, c));
+              const senior = piece?.type === "staff" && piece.age >= 2;
+              const interactive = !gameOver && (piece?.player === currentPlayer || possible || (currentPlayer === "C" && !piece));
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  disabled={gameOver}
+                  aria-label={`Row ${r + 1}, column ${c + 1}: ${piece ? `${senior ? 'Senior Staff' : piece.type}, Player ${piece.player}` : 'empty'}${possible ? ', legal move' : ''}`}
+                  aria-pressed={isSelected}
+                  onClick={() => handleSquareClick(r, c)}
+                  className="relative flex shrink-0 items-center justify-center border border-black/10 focus-visible:z-10 focus-visible:outline-4 focus-visible:outline-blue-600"
+                  style={{ width: squareSize, height: squareSize, backgroundColor: isSelected ? '#fde68a' : possible ? '#a7f3d0' : (r + c) % 2 === 0 ? '#e2e8f0' : '#cbd5e1', cursor: interactive ? 'pointer' : 'default' }}
+                >
+                  {piece && <ArenaPiece piece={piece} isSenior={senior} />}
+                  {possible && !piece && <span className="h-3 w-3 rounded-full bg-emerald-700" />}
+                </button>
               );
-            const isSenior =
-              board[rowIndex][colIndex] && board[rowIndex][colIndex].age >= 2;
-            const toPointer =
-              (cell?.type == "boss" && currentPlayer == "A") ||
-              (cell?.type == "manager" && currentPlayer == "B") ||
-              currentPlayer === "C" || isPossibleMove;
-
-            return (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                onClick={() => handleSquareClick(rowIndex, colIndex)}
-                style={{
-                  width: `${squareSize}px`,
-                  height: `${squareSize}px`,
-                  backgroundColor:
-                    (rowIndex + colIndex) % 2 === 0 ? "#f0d9b5" : "#b58863",
-                  border: isSelected
-                    ? "2px solid red"
-                    : isPossibleMove
-                    ? "2px solid green"
-                    : "1px solid #000",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: `${squareSize * 0.6}px`,
-                  position: "relative",
-                  cursor: toPointer ? "pointer" : "default",
-                }}
-              >
-                {cell && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ArenaPiece piece={cell} isSenior={isSenior} />
-                  </div>
-                )}
-                {isPossibleMove && !cell && (
-                  <div className="w-1/3 h-1/3 rounded-full bg-green-500 opacity-50" />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ))}
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   );
-};
-
-export default ArenaBoard;
+}
