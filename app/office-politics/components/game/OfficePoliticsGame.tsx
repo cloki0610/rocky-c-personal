@@ -38,7 +38,7 @@ export default function OfficePoliticsGame() {
             only changes the display.
           </p>
         </section>
-        <details className="rounded-2xl border border-slate-200 p-5" open>
+        <details className="rounded-2xl border border-slate-200 p-5">
           <summary className="mb-3 cursor-pointer text-lg font-semibold">
             How to play
           </summary>
