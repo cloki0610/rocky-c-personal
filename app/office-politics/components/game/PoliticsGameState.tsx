@@ -1,3 +1,4 @@
+"use client";
 import { usePolitics } from "../../context/PoliticsContext";
 import { seniorCount } from "../../utils/game";
 
@@ -14,17 +15,17 @@ export default function PoliticsGameState() {
   return (
     <div className="mb-5 space-y-3">
       <div className="flex flex-wrap gap-2 text-sm">
-        <span className="rounded-full bg-white px-3 py-1">
+        <span className="rounded-full bg-white border border-gray-300 px-3 py-1">
           Round {roundCount}
         </span>
-        <span className="rounded-full bg-white px-3 py-1">
+        <span className="rounded-full bg-white border border-gray-300 px-3 py-1">
           Boss survived: {roundCount - 1} / {bossRoundTarget} rounds
         </span>
-        <span className="rounded-full bg-white px-3 py-1">
+        <span className="rounded-full bg-white border border-gray-300 px-3 py-1">
           Senior Staff: {seniorCount(board)} / {staffCountTarget}
         </span>
       </div>
-      <p role="status" aria-live="polite" className="min-h-12 font-semibold">
+      <p role="status" aria-live="polite" className="my-5 font-semibold">
         {gameStatus}
       </p>
       <div className="flex flex-wrap gap-2 text-xs">

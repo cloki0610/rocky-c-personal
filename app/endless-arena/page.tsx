@@ -15,19 +15,17 @@ export default function FighterArena() {
   }
 
   return (
-    <div className="w-full bg-gradient-to-b from-slate-950 to-slate-900 text-white flex flex-col items-center justify-center select-none">
-      <div className="w-full max-w-4xl">
-        <ArenaHeader player={world.player} stage={world.stage} best={best} />
-        <ArenaBoard
-          world={world}
-          boardRef={boardRef}
-          scale={scale}
-          best={best}
-          startGame={startGame}
-          changeFighter={changeFighter}
-        />
-        <ArenaControls player={world.player} changeFighter={changeFighter} />
-      </div>
+    <div className="w-full max-w-4xl">
+      <ArenaHeader player={world.player} stage={world.stage} best={best} />
+      <ArenaBoard
+        world={world}
+        boardRef={boardRef}
+        scale={scale}
+        best={best}
+        startGame={startGame}
+        changeFighter={changeFighter}
+      />
+      <ArenaControls player={world.player} changeFighter={changeFighter} />
     </div>
   );
 }

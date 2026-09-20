@@ -1,5 +1,7 @@
+"use client";
 import { usePolitics } from "../../context/PoliticsContext";
 import BoardSelectBox from "./BoardSelect";
+import BoardButton from "./BoardButton";
 
 export default function BoardSetting() {
   const {
@@ -11,6 +13,7 @@ export default function BoardSetting() {
     setBoardSize,
     setStaffCountTarget,
     setSquareSize,
+    initializeBoard,
   } = usePolitics();
   return (
     <div className="mt-4 flex w-full flex-col gap-2">
@@ -42,6 +45,7 @@ export default function BoardSetting() {
         handleChange={setBossRoundTarget}
         boxType="bossRounds"
       />
+      <BoardButton onClick={initializeBoard}>New game</BoardButton>
     </div>
   );
 }

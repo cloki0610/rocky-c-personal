@@ -1,3 +1,4 @@
+"use client";
 import { usePolitics } from "../../context/PoliticsContext";
 import PoliticsPiece from "./PoliticsPiece";
 

@@ -1,22 +1,26 @@
-"use client";
-import { usePolitics } from "../../context/PoliticsContext";
 import PoliticsInstructions from "../instructions/PoliticsInstructions";
 import PoliticsBoard from "../board/PoliticsBoard";
 import BoardSetting from "../settings/BoardSetting";
 import PoliticsGameState from "./PoliticsGameState";
-import BoardButton from "./BoardButton";
 
 export default function OfficePoliticsGame() {
-  const { initializeBoard } = usePolitics();
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
       <section
         aria-label="Game"
         className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
       >
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-xl font-semibold">The office floor</h2>
-          <BoardButton onClick={initializeBoard}>New game</BoardButton>
+        <div className="mb-5 flex flex-col items-start justify-between gap-3">
+            <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">
+              Local multiplayer · 3 players
+            </p>
+          <h2 className="text-4xl font-bold tracking-tight">
+            Office Politics
+          </h2>
+          <p className="max-w-2xl text-slate-600">
+            One office. Three ambitions. Capture your rival or grow a team of
+            Senior Staff to win.
+          </p>
         </div>
         <PoliticsGameState />
         <PoliticsBoard />
