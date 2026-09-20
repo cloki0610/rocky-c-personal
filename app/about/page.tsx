@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const AboutPage = () => {
   return (
-    <main className="mx-auto max-w-7xl px-6 pt-12 pb-16 sm:px-16 sm:pt-20 sm:pb-24">
+    <main className="mx-auto w-full h-[calc(100vh-6rem)] max-w-6xl px-4 py-8 sm:px-6">
       <AboutContent />
     </main>
   );

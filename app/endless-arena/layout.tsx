@@ -10,5 +10,7 @@ export const metadata: Metadata = {
 export default function EndlessArenaLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  return children;
+  return <div className="w-full h-[calc(100vh-6rem)] bg-gradient-to-b from-slate-950 to-slate-900 text-white flex items-center justify-center p-4 sm:p-6 select-none">
+    {children}
+  </div>;
 }

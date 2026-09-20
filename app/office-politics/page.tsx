@@ -10,19 +10,7 @@ export const metadata: Metadata = {
 
 export default function OfficePoliticsPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <header className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">
-          Local multiplayer · 3 players
-        </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight">
-          Office Politics
-        </h1>
-        <p className="mt-3 max-w-2xl text-slate-600">
-          One office. Three ambitions. Capture your rival or grow a team of
-          Senior Staff to win.
-        </p>
-      </header>
+    <main className="mx-auto w-full h-[calc(100vh-6rem)] max-w-6xl px-4 py-8 sm:px-6">
       <PoliticsProvider>
         <OfficePoliticsGame />
       </PoliticsProvider>

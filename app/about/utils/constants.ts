@@ -12,9 +12,6 @@ export const contacts = [
   },
 ];
 
-export const linkStyle =
-  "rounded-sm underline decoration-[#8d6e63]/40 underline-offset-4 hover:text-[#72574d] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#72574d]";
-
 export const aboutAnimations = {
   title: fadeIn("down", "spring", 1, 2, 0),
   intro: fadeIn("right", "spring", 1, 2, 0),
