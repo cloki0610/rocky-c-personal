@@ -1,7 +1,5 @@
 const menuItem = [
-  { name: "Office Politics", url: "/office-politics" },
-  { name: "Endless Arena", url: "/endless-arena" },
-  { name: "Tower Defense", url: "/barebone-td" },
+  { name: "Games", url: "/games" },
   { name: "About", url: "/about" },
 ];
 
