@@ -19,6 +19,12 @@ export const games = [
       "Build turrets to hold the line through endless waves in this classic tower defense game.",
     href: "/games/barebone-td",
   },
+  {
+    name: "Stepping Stone",
+    description:
+      "Cross an endless bridge by picking the stable stone. Guess wrong and you'll fall back to your last checkpoint — reach one every ten stones to recover full health.",
+    href: "/games/stepping-stone",
+  },
 ];
 
 export const gamesAnimations = {
