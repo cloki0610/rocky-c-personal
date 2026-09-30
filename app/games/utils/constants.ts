@@ -25,6 +25,12 @@ export const games = [
       "Cross an endless bridge by picking the stable stone. Guess wrong and you'll fall back to your last checkpoint — reach one every ten stones to recover full health.",
     href: "/games/stepping-stone",
   },
+  {
+    name: "Dr. Dual",
+    description:
+      "Doctor versus Doctor. Move with the mouse, cast Q W E R, and outlast a computer-controlled Dr. Doctor in a best-of-three arena duel.",
+    href: "/games/dr-dual",
+  },
 ];
 
 export const gamesAnimations = {
