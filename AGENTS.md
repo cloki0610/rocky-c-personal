@@ -11,8 +11,9 @@ Rocky.C is a personal website and playground for frontend prototypes. It uses Ne
 - `/games/endless-arena`: a keyboard-controlled survival game with Warrior and Ranger classes.
 - `/games/barebone-td`: an endless-wave tower defense game with three tower types, upgrades, selling, and 1x-10x speed control.
 - `/games/stepping-stone`: an endless bridge-crossing game where the player picks the stable top or bottom stone, loses health on wrong guesses, and heals at checkpoints every ten stones.
+- `/games/dr-dual`: a best-of-three Doctor Fighter mirror duel against a computer opponent (Easy/Normal/Hard). The mouse moves and attacks; Q/W/E/R cast abilities toward the cursor. Only player-vs-computer exists; the engine is player-agnostic so a local two-player mode can reuse it.
 
-The application currently has no API routes, database, authentication, or saved game persistence. Office Politics state, the Barebone TD best-wave score, and the Stepping Stone best distance live in React memory and reset on reload.
+The application currently has no API routes, database, authentication, or saved game persistence. Office Politics state, the Barebone TD best-wave score, the Stepping Stone best distance, and the Dr. Dual win/loss record live in React memory and reset on reload.
 
 ## Project map
 
@@ -68,6 +69,22 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/games/stepping-stone/utils/game.test.mjs`                | Node regression tests for the crossing engine                                                                       |
 | `app/games/stepping-stone/utils/keyboard.ts`                  | Keyboard normalization and ArrowUp/W, ArrowDown/S stone bindings                                                    |
 | `app/games/stepping-stone/interfaces/SteppingStoneTypes.ts`   | World, phase, and component prop types                                                                              |
+| `app/games/dr-dual/page.tsx`                                  | Client-rendered duel page composing the header, status bars, arena, and ability bar from the game hook              |
+| `app/games/dr-dual/layout.tsx`                                | Server layout with route metadata and the scrollable full-height game frame                                         |
+| `app/games/dr-dual/components/arena/`                         | Arena board with pointer handlers, Doctor sprites, burn aura, cleavers, aim guide, and damage numbers                |
+| `app/games/dr-dual/components/hud/`                           | Header, health/round/status bars, Q/W/E/R ability buttons with cooldowns, and round/match overlays                  |
+| `app/games/dr-dual/components/setup/`                         | Ability overview and CPU difficulty selection                                                                       |
+| `app/games/dr-dual/hooks/useDrDual.ts`                        | Screen flow, match start, session record; composes the loop and controls hooks                                      |
+| `app/games/dr-dual/hooks/useDualGameLoop.ts`                  | requestAnimationFrame loop, per-run CPU brain, simulation step, match-over report                                   |
+| `app/games/dr-dual/hooks/usePlayerControls.ts`                | Mouse move/attack orders, cursor aim, Q/W/E/R keys, ability buttons, board scaling                                  |
+| `app/games/dr-dual/utils/game.ts`                             | World setup and the move/attack/cast commands                                                                       |
+| `app/games/dr-dual/utils/simulation.ts`                       | Simulation `step`: timers, regen, burn, movement, melee, cleavers, and round resolution                             |
+| `app/games/dr-dual/utils/ai.ts`                               | CPU opponent that issues the same commands as the player, tuned per difficulty                                      |
+| `app/games/dr-dual/utils/constants.ts`                        | Arena, fighter, and ability constants; ability descriptions, cooldown display values, and CPU difficulty profiles   |
+| `app/games/dr-dual/utils/helpers.ts`                          | Vector math, ability damage/heal formulas, move speed, ability readiness, and damage-number floaters                |
+| `app/games/dr-dual/utils/keyboard.ts`                         | Q/W/E/R key mapping that ignores repeats and modifier shortcuts                                                     |
+| `app/games/dr-dual/utils/game.test.mjs`                       | Node regression tests for the duel engine                                                                           |
+| `app/games/dr-dual/interfaces/DrDualTypes.ts`                 | World, fighter, CPU, and component prop types                                                                       |
 | `public/`                                                     | SVG game pieces, social icons, and other static assets                                                              |
 
 ## Development and verification
@@ -81,24 +98,26 @@ npm run dev                         # Development server on localhost:3000
 npm run format                      # Format all supported source and documentation files with Prettier
 node --test app/games/office-politics/utils/game.test.mjs   # Office Politics engine regression tests
 node --test app/games/stepping-stone/utils/game.test.mjs    # Stepping Stone engine regression tests
+node --test app/games/dr-dual/utils/game.test.mjs     # Dr. Dual engine regression tests
 node node_modules/typescript/bin/tsc --noEmit
 node node_modules/eslint/bin/eslint.js app
 npm run build                      # Production compilation and static generation
 npm run start                      # Serve the completed production build
 ```
 
-- Both engine test files import TypeScript directly from `.mjs`; use a Node runtime with native TypeScript stripping enabled. They have been verified with Node 26.7.0. The repository does not currently pin Node via `engines` or a version file.
+- The engine test files import TypeScript directly from `.mjs`; use a Node runtime with native TypeScript stripping enabled. They have been verified with Node 26.7.0. The repository does not currently pin Node via `engines` or a version file.
 - The `package.json` `lint` script invokes `next lint`, which Next.js 16 removed; use the direct ESLint command above. The `test:office-politics` script still points at the old `app/office-politics/` path and fails until it is updated to `app/games/office-politics/`, so run the test file directly as shown.
 - On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`.
 - `next/font/google` loads Inter; a fresh build may need network access to fetch the font.
-- For game-logic changes, run the engine tests, type check, lint, and build. Add regression coverage for changed behavior rather than duplicating implementation details.
+- For game-logic changes, run that game's engine tests, type check, lint, and build. Add regression coverage for changed behavior rather than duplicating implementation details.
+- Only run the test file for the game folder you are working on (for example, `node --test app/games/<name>/utils/game.test.mjs`). Do not run, edit, or otherwise touch test files belonging to other games.
 - For UI changes, check desktop and narrow mobile layouts, keyboard interaction, game status announcements, and browser runtime errors. Large boards should scroll inside their panel without overflowing the page.
 - No browser-test runner is declared in `package.json`; do not assume a committed end-to-end suite exists.
 - Documentation-only changes need factual and diff review, not an application rebuild.
 
 ## Office Politics invariants
 
-Keep `game.ts`, its tests, and `PoliticsInstructions.tsx` consistent when changing rules.
+Keep `game.ts`, `simulation.ts`, their tests, and `PoliticsInstructions.tsx` consistent when changing rules.
 
 - Each round runs one Boss move (A), two consecutive Manager moves (B), then Staff placement (C). Invalid moves do not consume a move; a blocked Manager skips any remaining moves. Leaders move one square horizontally or vertically; Staff cannot move.
 - Both leaders can capture Junior Staff. The Boss can always capture the Manager and can capture Senior Staff only when fewer than three Seniors are on the board.
@@ -112,13 +131,24 @@ Keep `game.ts`, its tests, and `PoliticsInstructions.tsx` consistent when changi
 
 ## Stepping Stone invariants
 
-Keep `game.ts`, its tests, and the board animations consistent when changing rules.
+Keep `game.ts`, `simulation.ts`, their tests, and the board animations consistent when changing rules.
 
 - Each step offers a top and bottom stone; one side, chosen at random, is stable. Choosing a stone only starts the jump (`jumping`), and the outcome is decided in `landJump` when the player's landing animation finishes.
 - A stable landing advances `stonesCrossed`, updates `furthest`, and picks a new stable side. Every tenth stone since the last checkpoint is a checkpoint: health refills to five and `justHealed` shows a brief toast.
 - A wrong landing costs one health and enters `falling`. After the fall animation, zero health ends the game; otherwise the player goes back to the last checkpoint (or the starting bank), loses progress made since then, and gets a new stable side.
 - The score is the furthest stone reached, not the current position. The best score is kept in React memory only.
 - Engine actions called in the wrong phase return the world unchanged, so repeated key presses mid-animation have no effect.
+
+## Dr. Dual invariants
+
+Keep `game.ts`, `simulation.ts`, their tests, the ability descriptions in `constants.ts`, and the CPU in `ai.ts` consistent when changing rules. Gameplay constants live in `constants.ts` and pure formulas in `helpers.ts`. Node loads these files in tests, so the engine files import each other with explicit `.ts` extensions (enabled by `allowImportingTsExtensions` in `tsconfig.json`) and must not import React or browser-only modules.
+
+- Both fighters are identical Dr. Mundos-like fighters with 600 HP and slow passive regeneration. Orders and casts are rejected outside the `fighting` phase.
+- Clicking (left or right) on the opponent orders a chase-and-melee attack; clicking elsewhere moves there, and holding the button keeps steering. Positions stay inside the arena and bodies cannot overlap.
+- Q throws a cleaver toward the cursor for an HP cost; it deals a base amount plus a share of the target's current HP and slows on hit. W toggles a burning aura that drains the caster and damages an opponent within range; it switches itself off at low HP. E costs HP and empowers the next melee hit, with bonus damage that grows as the caster's HP falls. Melee swings on a fixed 1.75-second cooldown that nothing shortens. R heals over time, with a larger heal the lower the caster's HP, and grants bonus speed while healing.
+- Health costs can never reduce the caster to zero; an ability that cannot be paid is not cast.
+- A knockout ends the round; a double knockout is a draw that awards no round. The first fighter to two round wins takes the match. Each round starts with a countdown and full health, cooldowns, and positions.
+- The CPU acts only through `commandMove`, `commandAttack`, and `castAbility`, so it follows the same rules as the player.
 
 ## Change conventions
 
