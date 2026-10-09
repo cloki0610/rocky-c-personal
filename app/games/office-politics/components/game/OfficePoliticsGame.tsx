@@ -1,6 +1,7 @@
 import PoliticsInstructions from "../instructions/PoliticsInstructions";
 import PoliticsBoard from "../board/PoliticsBoard";
 import BoardSetting from "../settings/BoardSetting";
+import PlayerSetting from "../settings/PlayerSetting";
 import PoliticsGameState from "./PoliticsGameState";
 
 export default function OfficePoliticsGame() {
@@ -11,12 +12,10 @@ export default function OfficePoliticsGame() {
         className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
       >
         <div className="mb-5 flex flex-col items-start justify-between gap-3">
-            <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">
-              Local multiplayer · 3 players
-            </p>
-          <h2 className="text-4xl font-bold tracking-tight">
-            Office Politics
-          </h2>
+          <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">
+            3 players · Human or computer
+          </p>
+          <h2 className="text-4xl font-bold tracking-tight">Office Politics</h2>
           <p className="max-w-2xl text-slate-600">
             One office. Three ambitions. Capture your rival or grow a team of
             Senior Staff to win.
@@ -25,17 +24,27 @@ export default function OfficePoliticsGame() {
         <PoliticsGameState />
         <PoliticsBoard />
         <p className="mt-3 text-sm text-slate-600">
-          Select your piece, then a highlighted square. Staff can be placed on
-          any empty square.
+          Select your piece, then a highlighted square. Staff joins the team on
+          a highlighted square next to existing Staff, or next to the Manager
+          when no Staff remain.
         </p>
       </section>
       <aside className="space-y-6">
         <section className="rounded-2xl border border-slate-200 p-5">
+          <h2 className="text-lg font-semibold">Players</h2>
+          <PlayerSetting />
+          <p className="mt-3 text-xs text-slate-500">
+            Hand any role to the computer. Changes apply immediately without
+            restarting the game.
+          </p>
+        </section>
+        <section className="rounded-2xl border border-slate-200 p-5">
           <h2 className="text-lg font-semibold">Game settings</h2>
           <BoardSetting />
           <p className="mt-3 text-xs text-slate-500">
-            Changing the board or victory target starts a new game. Square size
-            only changes the display.
+            Changing the board or a victory target starts a new game. A new
+            board size also sets the recommended Boss rounds and performance
+            target for that size. Square size only changes the display.
           </p>
         </section>
         <details className="rounded-2xl border border-slate-200 p-5">

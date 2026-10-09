@@ -5,7 +5,7 @@ import OfficePoliticsGame from "./components/game/OfficePoliticsGame";
 export const metadata: Metadata = {
   title: "Rocky.C - Office Politics",
   description:
-    "A local three-player strategy game. Play as the Boss, Manager, or Staff and compete for control of the office.",
+    "A three-player strategy game for people or computer opponents. Play as the Boss, Manager, or Staff and compete for control of the office.",
 };
 
 export default function OfficePoliticsPage() {
