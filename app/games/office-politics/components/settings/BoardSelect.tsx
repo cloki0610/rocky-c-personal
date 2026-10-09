@@ -3,7 +3,7 @@ interface BoardSelectBoxProps {
   initSize: number;
   options: number[];
   handleChange: (newSize: number) => void;
-  boxType: "board" | "square" | "staffCount" | "bossRounds";
+  boxType: "board" | "square" | "staffCount" | "bossRounds" | "performance";
 }
 
 const BoardSelectBox = ({

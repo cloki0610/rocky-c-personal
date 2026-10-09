@@ -7,7 +7,7 @@ Rocky.C is a personal website and playground for frontend prototypes. It uses Ne
 - `/`: animated personal introduction.
 - `/about`: profile and contact links.
 - `/games`: game list page; the navigation bar links to it instead of listing each game.
-- `/games/office-politics`: a local, same-device strategy game for three players.
+- `/games/office-politics`: a same-device strategy game for three roles (Boss, Manager, Staff) on 7×7 to 10×10 boards; any role can be handed to a computer opponent.
 - `/games/endless-arena`: a keyboard-controlled survival game with Warrior and Ranger classes.
 - `/games/barebone-td`: an endless-wave tower defense game with three tower types, upgrades, selling, and 1x-10x speed control.
 - `/games/stepping-stone`: an endless bridge-crossing game where the player picks the stable top or bottom stone, loses health on wrong guesses, and heals at checkpoints every ten stones.
@@ -41,14 +41,19 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/games/endless-arena/utils/keyboard.ts`                   | Keyboard input normalization                                                                                        |
 | `app/games/endless-arena/interfaces/EndlessArenaTypes.ts`     | All custom arena types, including game state and component props                                                    |
 | `app/games/office-politics/page.tsx`                          | Server-rendered page shell, metadata, and game provider                                                             |
-| `app/games/office-politics/components/board/`                 | Interactive board and piece rendering                                                                               |
-| `app/games/office-politics/components/settings/`              | Board, square-size, and victory-target controls                                                                     |
-| `app/games/office-politics/components/game/`                  | Game layout, status, and new-game button                                                                            |
-| `app/games/office-politics/components/instructions/`          | Game rules and how-to-play content                                                                                  |
+| `app/games/office-politics/components/board/`                 | Board with move/placement highlights, protected-Staff shields, and accessible square labels                         |
+| `app/games/office-politics/components/icons/`                 | Decorative SVG icon components (e.g. the protected-Staff shield); keep inline SVGs here                             |
+| `app/games/office-politics/components/settings/`              | Board size, square size, Senior/round/performance targets, human/computer players, new game                         |
+| `app/games/office-politics/components/game/`                  | Game layout and status chips (round, survival, Seniors, performance, turn)                                          |
+| `app/games/office-politics/components/instructions/`          | Renders the how-to-play sections from `utils/instructions.ts`                                                       |
 | `app/games/office-politics/context/PoliticsContext.tsx`       | Exposes game state and display settings to components                                                               |
-| `app/games/office-politics/hooks/useOfficePolitics.ts`        | React adapter around the pure game engine                                                                           |
-| `app/games/office-politics/utils/game.ts`                     | Move validation, turn advancement, promotions, and outcomes                                                         |
+| `app/games/office-politics/hooks/useOfficePolitics.ts`        | React adapter around the pure game engine; composes the AI hook and ignores board clicks on computer turns          |
+| `app/games/office-politics/hooks/useOfficePoliticsAI.ts`      | Human/computer seat selection and the delayed timer that plays computer turns                                       |
+| `app/games/office-politics/utils/game.ts`                     | Pure engine: moves, protection, placement, promotion, performance, outcomes, presets                                |
 | `app/games/office-politics/utils/game.test.mjs`               | Node regression tests for game rules                                                                                |
+| `app/games/office-politics/utils/ai.ts`                       | Pure computer opponent: scores legal moves and placements, then plays them through `clickSquare`                    |
+| `app/games/office-politics/utils/ai.test.mjs`                 | Node regression tests for the computer opponent                                                                     |
+| `app/games/office-politics/utils/instructions.ts`             | How-to-play rules text grouped by topic; per-size defaults are read from `BOARD_PRESETS`                            |
 | `app/games/office-politics/interfaces/OfficePoliticsTypes.ts` | Shared game types                                                                                                   |
 | `app/games/barebone-td/page.tsx`                              | Client-rendered tower defense page composing the board and HUD from the game hook                                   |
 | `app/games/barebone-td/layout.tsx`                            | Server layout with route metadata and the dark full-height game frame                                               |
@@ -97,6 +102,7 @@ The following commands use installed local dependencies:
 npm run dev                         # Development server on localhost:3000
 npm run format                      # Format all supported source and documentation files with Prettier
 node --test app/games/office-politics/utils/game.test.mjs   # Office Politics engine regression tests
+node --test app/games/office-politics/utils/ai.test.mjs     # Office Politics computer opponent tests
 node --test app/games/stepping-stone/utils/game.test.mjs    # Stepping Stone engine regression tests
 node --test app/games/dr-dual/utils/game.test.mjs     # Dr. Dual engine regression tests
 node node_modules/typescript/bin/tsc --noEmit
@@ -117,17 +123,37 @@ npm run start                      # Serve the completed production build
 
 ## Office Politics invariants
 
-Keep `game.ts`, `simulation.ts`, their tests, and `PoliticsInstructions.tsx` consistent when changing rules.
+Keep `game.ts`, `ai.ts`, their tests, and the rules text in `utils/instructions.ts` consistent when changing rules.
 
-- Each round runs one Boss move (A), two consecutive Manager moves (B), then Staff placement (C). Invalid moves do not consume a move; a blocked Manager skips any remaining moves. Leaders move one square horizontally or vertically; Staff cannot move.
-- Both leaders can capture Junior Staff. The Boss can always capture the Manager and can capture Senior Staff only when fewer than three Seniors are on the board.
-- The Manager cannot capture Senior Staff and can capture the Boss only with at least three Seniors on the board.
-- Each valid Staff placement ages existing Staff by one and adds a new Junior at age zero. Staff become Senior at age two. Invalid input must not age pieces or advance the round.
-- Capturing the opposing leader wins immediately. The Boss also wins after surviving the selected number of complete rounds (1-100, default 10); a round completes after valid Staff placement. Staff target and blocked-leader wins take priority over survival on the same placement. Staff wins at the selected Senior target or when neither leader has a legal move. A single blocked leader skips their turn.
-- Determine outcomes from the updated board. Draw detection uses actual legal moves, not a bounded path search or speculative future captures.
-- Supported board sizes are 5–10; the engine accepts Senior targets of 3–10, and settings offer 5–10. Defaults are a 9×9 board, 40px squares, and a target of five.
-- The default target ends the game as soon as five Seniors exist, letting the Manager use its three-Senior capture rule before Staff wins.
-- Changes to board size or either victory target start a new game. Square-size changes preserve gameplay. Finished games ignore board input and clear selection.
+### Turns and movement
+
+- Each round runs one Boss move (A), two consecutive Manager moves (B), then Staff placement (C). Invalid moves do not consume a move; a blocked Manager skips any remaining moves, and a single blocked leader skips their turn. Leaders move one square horizontally or vertically; Staff cannot move.
+- Both leaders can capture Junior Staff. The Boss can always capture the Manager and can capture Senior Staff only when fewer than three Seniors are on the board. The Manager cannot capture Senior Staff and can capture the Boss only with at least three Seniors on the board.
+- The Boss cannot capture Staff orthogonally adjacent to the Manager (`isGuarded`). Legal-move and draw detection include this rule, so protected Staff can block the Boss.
+
+### Staff placement and promotion
+
+- Staff places a new Junior on an empty square orthogonally adjacent to an existing Staff piece (`canPlace`); with no Staff on the board, it must be orthogonally adjacent to the Manager. If no such square exists, the round completes without placement or aging.
+- Each valid Staff placement ages existing Staff by one and adds a new Junior at age zero. Staff become Senior at age two. Invalid input must not age pieces or advance the round. Because one Junior is placed per round, at most two Juniors exist at once.
+
+### Outcomes
+
+- The Boss wins by capturing the Manager or by surviving the selected number of complete rounds; a round completes after valid Staff placement (or a placement skipped because none is legal).
+- The Manager wins by capturing the Boss or when `performance` reaches the selected target. Performance counts Staff within `PERFORMANCE_REACH` (2) steps of the Manager by Manhattan distance, so diagonal neighbours count: 1 per Junior, 3 per Senior. Counting the whole board instead lets the target numbers alone decide Manager versus Staff, because Seniors and Juniors rise on a fixed schedule.
+- Staff wins at the selected Senior target or when neither leader has a legal move.
+- `advance` resolves outcomes on the updated board in this order: captured leader, Staff Senior target, Manager performance target, both leaders blocked, Boss survival. Draw detection uses actual legal moves, not a bounded path search or speculative future captures.
+
+### Settings and balance
+
+- Supported board sizes are 7–10; 5×5 and 6×6 were removed because the Boss won every simulated game there. The engine accepts Senior targets of 3–10 (settings offer 5–10), Boss rounds of 1–100 (settings offer 10, then 12–30 in steps of three), and performance targets of 3–40 (settings offer 8–15). Defaults are a 9×9 board, 40px squares, and a Senior target of five.
+- `BOARD_PRESETS` in `game.ts` holds the recommended Boss rounds and performance target per board size (7×7: 12/12, 8×8: 12/11, 9×9: 10/11, 10×10: 10/10). `createGame` uses them when those targets are omitted, and changing the board size applies them while keeping the Senior target; changing any other target keeps the current values.
+- The presets were tuned with computer-only simulations (300 games per size, Boss / Manager / Staff win rates: 8×8 38/35/28, 9×9 41/24/35, 10×10 37/36/27). Staff stays weak on 7×7 (43/48/9). 7×7 and 8×8 use 12 rounds because at 10 the Boss wins about two thirds of games there; on 9×9 and 10×10, 12 rounds drops the Boss to about a quarter or less. No simulation script is committed; re-check balance with a throwaway script that plays `takeAiTurn` games when changing rules or the AI.
+- Changes to board size or any victory target start a new game. Square-size and human/computer changes preserve gameplay. Finished games ignore board input and clear selection.
+
+### Computer players
+
+- Each role (A, B, C) is Human or Computer; all start as Human. The computer chooses with `utils/ai.ts` and plays through `clickSquare`, so it follows the same rules; `useOfficePoliticsAI` plays computer turns after a short delay and board clicks are ignored on computer turns. Keep AI logic in `utils/ai.ts` and `hooks/useOfficePoliticsAI.ts`, not in the engine.
+- The computer Boss hunts Juniors close to promotion (and Seniors while fewer than three exist), discounts protected Staff, and crowds the team's edge to use up Staff's legal placement squares. The computer Manager spares Staff unless Staff is one placement from its Senior target, guards the Staff the Boss is closing in on, keeps direct reports within reach for performance, and hunts the Boss once three Seniors exist. Computer Staff places away from the Boss, treats protected squares as safe, keeps room to grow, and avoids feeding the Manager's performance.
 
 ## Stepping Stone invariants
 

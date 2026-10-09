@@ -9,6 +9,8 @@ export default function BoardSetting() {
     staffCountTarget,
     bossRoundTarget,
     setBossRoundTarget,
+    performanceTarget,
+    setPerformanceTarget,
     squareSize,
     setBoardSize,
     setStaffCountTarget,
@@ -20,7 +22,7 @@ export default function BoardSetting() {
       <BoardSelectBox
         title="Board size"
         initSize={boardSize}
-        options={[5, 6, 7, 8, 9, 10]}
+        options={[7, 8, 9, 10]}
         handleChange={setBoardSize}
         boxType="board"
       />
@@ -41,9 +43,16 @@ export default function BoardSetting() {
       <BoardSelectBox
         title="Rounds for Boss to survive"
         initSize={bossRoundTarget}
-        options={[10, 15, 20, 30, 50, 100]}
+        options={[10, 12, 15, 18, 21, 24, 27, 30]}
         handleChange={setBossRoundTarget}
         boxType="bossRounds"
+      />
+      <BoardSelectBox
+        title="Performance for Manager to win"
+        initSize={performanceTarget}
+        options={[8, 9, 10, 11, 12, 13, 14, 15]}
+        handleChange={setPerformanceTarget}
+        boxType="performance"
       />
       <BoardButton onClick={initializeBoard}>New game</BoardButton>
     </div>

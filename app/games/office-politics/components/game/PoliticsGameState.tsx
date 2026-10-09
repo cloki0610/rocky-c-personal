@@ -1,6 +1,6 @@
 "use client";
 import { usePolitics } from "../../context/PoliticsContext";
-import { seniorCount } from "../../utils/game";
+import { performance, seniorCount } from "../../utils/game";
 
 export default function PoliticsGameState() {
   const {
@@ -10,7 +10,9 @@ export default function PoliticsGameState() {
     gameStatus,
     currentPlayer,
     staffCountTarget,
+    performanceTarget,
     gameOver,
+    controllers,
   } = usePolitics();
   return (
     <div className="mb-5 space-y-3">
@@ -23,6 +25,9 @@ export default function PoliticsGameState() {
         </span>
         <span className="rounded-full bg-white border border-gray-300 px-3 py-1">
           Senior Staff: {seniorCount(board)} / {staffCountTarget}
+        </span>
+        <span className="rounded-full bg-white border border-gray-300 px-3 py-1">
+          Manager performance: {performance(board)} / {performanceTarget}
         </span>
       </div>
       <p role="status" aria-live="polite" className="my-5 font-semibold">
@@ -41,7 +46,12 @@ export default function PoliticsGameState() {
             className={`rounded-lg border px-3 py-2 ${!gameOver && currentPlayer === player ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white"}`}
           >
             {player}: {name}
-            {!gameOver && currentPlayer === player ? " · Your turn" : ""}
+            {controllers[player] === "computer" ? " (Computer)" : ""}
+            {!gameOver && currentPlayer === player
+              ? controllers[player] === "computer"
+                ? " · Thinking…"
+                : " · Your turn"
+              : ""}
           </span>
         ))}
       </div>

@@ -1,43 +1,18 @@
+import { INSTRUCTION_SECTIONS } from "../../utils/instructions";
+
 export default function PoliticsInstructions() {
   return (
-    <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
-      <li>
-        Play on the same device. Turns run Boss (A), Manager (B), then Staff
-        (C).
-      </li>
-      <li>
-        Each round, the Boss moves once, then the Manager makes two consecutive
-        moves, then Staff places a Junior on an empty square.
-      </li>
-      <li>
-        Boss and Manager move one square horizontally or vertically. Both can
-        capture Junior Staff. The Boss can capture Senior Staff only while fewer
-        than three Seniors remain on the board.
-      </li>
-      <li>
-        The Boss wins by surviving the selected number of complete rounds (10 by
-        default) or capturing the Manager. A round ends after Staff placement;
-        Staff wins take priority if both sides reach their targets on that
-        placement.
-      </li>
-      <li>
-        The Manager cannot capture Senior Staff. With at least three Seniors on
-        the board, the Manager can capture the Boss to win.
-      </li>
-      <li>
-        Staff places one Junior on an empty square each round. Existing Staff
-        age after each placement and become Seniors after surviving two rounds.
-        The newly placed Junior starts at age zero.
-      </li>
-      <li>
-        Staff wins when the number of Seniors reaches the selected target, or
-        when neither leader has a legal move. A leader with no legal move skips
-        their turn.
-      </li>
-      <li>
-        The default target is five, letting the Manager use the three-Senior
-        capture rule before Staff wins.
-      </li>
-    </ul>
+    <div className="space-y-4 text-sm text-slate-600">
+      {INSTRUCTION_SECTIONS.map(({ title, rules }) => (
+        <section key={title}>
+          <h3 className="mb-1 font-semibold text-slate-800">{title}</h3>
+          <ul className="list-disc space-y-2 pl-5">
+            {rules.map((rule) => (
+              <li key={rule}>{rule}</li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   );
 }
