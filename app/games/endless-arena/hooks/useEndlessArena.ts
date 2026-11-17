@@ -1,75 +1,40 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import useBoardScale from "@/app/games/hooks/useBoardScale";
 import type {
   ArenaScreen,
   ClassId,
-  KeyState,
   World,
   UseEndlessArenaResult,
 } from "../interfaces/EndlessArenaTypes";
-import { TRACKED_KEYS, VIEW_W } from "../utils/constants";
+import { VIEW_W } from "../utils/constants";
 import { initWorld, step } from "../utils/game";
-import { normalizeKey } from "../utils/keyboard";
+import useArenaControls from "./useArenaControls";
 
 export default function useEndlessArena(): UseEndlessArenaResult {
   const [screen, setScreen] = useState<ArenaScreen>("select");
   const world = useRef<World | null>(null);
-  const keys = useRef<KeyState>({});
-  const boardRef = useRef<HTMLDivElement | null>(null);
   const [, setTick] = useState(0);
   const [runId, setRunId] = useState(0);
-  const [scale, setScale] = useState(1);
   const [best, setBest] = useState(0);
+  const active = screen === "game";
+  const { keys, resetKeys } = useArenaControls(active);
+  const { boardRef, scale } = useBoardScale(VIEW_W, active);
 
-  const startGame = useCallback((clsId: ClassId) => {
-    world.current = initWorld(clsId);
-    keys.current = {};
-    setScreen("game");
-    setRunId((r) => r + 1);
-  }, []);
-
-  /* keyboard — refs only, so no re-render per keypress */
-  useEffect(() => {
-    if (screen !== "game") return;
-    const down = (e: KeyboardEvent) => {
-      const k = normalizeKey(e);
-      if (!TRACKED_KEYS.includes(k)) return;
-      e.preventDefault();
-      keys.current[k] = true;
-    };
-    const up = (e: KeyboardEvent) => {
-      const k = normalizeKey(e);
-      if (!TRACKED_KEYS.includes(k)) return;
-      e.preventDefault();
-      keys.current[k] = false;
-    };
-    const blur = () => (keys.current = {});
-    window.addEventListener("keydown", down);
-    window.addEventListener("keyup", up);
-    window.addEventListener("blur", blur);
-    return () => {
-      window.removeEventListener("keydown", down);
-      window.removeEventListener("keyup", up);
-      window.removeEventListener("blur", blur);
-    };
-  }, [screen]);
-
-  /* responsive: scale the 800x600 stage to fit its container */
-  useEffect(() => {
-    if (screen !== "game") return;
-    const el = boardRef.current;
-    if (!el) return;
-    const fit = () => setScale(el.clientWidth / VIEW_W);
-    fit();
-    const ro = new ResizeObserver(fit);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [screen]);
+  const startGame = useCallback(
+    (clsId: ClassId) => {
+      world.current = initWorld(clsId);
+      resetKeys();
+      setScreen("game");
+      setRunId((r) => r + 1);
+    },
+    [resetKeys],
+  );
 
   /* main loop */
   useEffect(() => {
-    if (screen !== "game" || !world.current) return;
+    if (!active || !world.current) return;
     let raf: number;
     let last = performance.now();
 
@@ -90,7 +55,7 @@ export default function useEndlessArena(): UseEndlessArenaResult {
 
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [runId, screen]);
+  }, [runId, active, keys]);
 
   const changeFighter = useCallback(() => setScreen("select"), []);
 

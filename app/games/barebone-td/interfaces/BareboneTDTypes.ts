@@ -99,15 +99,15 @@ export interface World {
   prepTimer: number;
 }
 
-export interface UseBareboneTDResult {
-  world: World;
-  boardRef: RefObject<HTMLDivElement | null>;
-  scale: number;
+export interface UseTDControlsOptions {
+  world: RefObject<World>;
+  refresh: () => void;
+}
+
+export interface UseTDControlsResult {
   selectedTower: TowerType | null;
   selectedTowerId: number | null;
-  best: number;
   speed: number;
-  now: number;
   selectTower: (type: TowerType) => void;
   placeCell: (row: number, col: number) => void;
   cycleSpeed: () => void;
@@ -115,6 +115,18 @@ export interface UseBareboneTDResult {
   sellSelectedTower: () => void;
   deselectTower: () => void;
   startWave: () => void;
+  resetControls: () => void;
+}
+
+export interface UseBareboneTDResult extends Omit<
+  UseTDControlsResult,
+  "resetControls"
+> {
+  world: World;
+  boardRef: RefObject<HTMLDivElement | null>;
+  scale: number;
+  best: number;
+  now: number;
   restart: () => void;
 }
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import type {
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
 } from "react";
+import useKeyDown from "@/app/games/hooks/useKeyDown";
 import type {
   AbilityKey,
   ClickMarker,
@@ -12,7 +13,7 @@ import type {
   UsePlayerControlsResult,
   Vec,
 } from "../interfaces/DrDualTypes";
-import { ARENA_W, FIGHTER_R, SPAWNS } from "../utils/constants";
+import { FIGHTER_R, SPAWNS } from "../utils/constants";
 import { castAbility, commandAttack, commandMove } from "../utils/game";
 import { dist } from "../utils/helpers";
 import { abilityKeyFor } from "../utils/keyboard";
@@ -21,18 +22,19 @@ import { abilityKeyFor } from "../utils/keyboard";
 const ATTACK_CLICK_SLACK = 14;
 
 /**
- * Player input: maps the pointer onto the scaled arena for move/attack
- * orders and aiming, and casts Q/W/E/R from the keyboard or ability buttons.
+ * Player input: maps the pointer onto the scaled arena (`boardRef` at
+ * `scale`) for move/attack orders and aiming, and casts Q/W/E/R from the
+ * keyboard or ability buttons.
  */
 export default function usePlayerControls({
   world,
   active,
+  boardRef,
+  scale,
 }: UsePlayerControlsOptions): UsePlayerControlsResult {
-  const boardRef = useRef<HTMLDivElement | null>(null);
   const aim = useRef<Vec>({ ...SPAWNS.cpu });
   const marker = useRef<ClickMarker | null>(null);
   const holdingMove = useRef(false);
-  const [scale, setScale] = useState(1);
 
   const resetControls = useCallback(() => {
     aim.current = { ...SPAWNS.cpu };
@@ -49,29 +51,16 @@ export default function usePlayerControls({
   );
 
   /* abilities: Q W E R, aimed at the last cursor position on the arena */
-  useEffect(() => {
-    if (!active) return;
-    const down = (e: KeyboardEvent) => {
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
       const key = abilityKeyFor(e);
       if (!key || !world.current) return;
       e.preventDefault();
       cast(key);
-    };
-    window.addEventListener("keydown", down);
-    return () => window.removeEventListener("keydown", down);
-  }, [active, world, cast]);
-
-  /* responsive: scale the fixed-size arena to fit its container */
-  useEffect(() => {
-    if (!active) return;
-    const el = boardRef.current;
-    if (!el) return;
-    const fit = () => setScale(el.clientWidth / ARENA_W);
-    fit();
-    const ro = new ResizeObserver(fit);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [active]);
+    },
+    [world, cast],
+  );
+  useKeyDown(onKeyDown, active);
 
   const toWorld = useCallback(
     (clientX: number, clientY: number): Vec | null => {
@@ -83,7 +72,7 @@ export default function usePlayerControls({
         y: (clientY - rect.top) / scale,
       };
     },
-    [scale],
+    [boardRef, scale],
   );
 
   /* left or right click: on the opponent attacks, anywhere else moves */
@@ -135,8 +124,6 @@ export default function usePlayerControls({
   );
 
   return {
-    boardRef,
-    scale,
     aim: aim.current,
     marker: marker.current,
     resetControls,
