@@ -4,7 +4,7 @@ export type ClassId = "warrior" | "ranger";
 export type EnemyType = "minion" | "buffed" | "boss";
 export type ArenaScreen = "select" | "game";
 export type ArenaPhase = "fighting" | "clearing" | "lost";
-export type KeyState = Partial<Record<string, boolean>>;
+export type { KeyState } from "@/app/games/interfaces/GamesTypes";
 
 export interface Point {
   x: number;
@@ -148,16 +148,14 @@ export interface World extends StageEnemies {
   camera: number;
 }
 
-export interface BarProps {
-  hp: number;
-  maxHp: number;
-  color: string;
-  height?: number;
-}
-
 export interface PipsProps {
   value: number;
   color: string;
+}
+
+export interface UseCharacterSelectControlsResult {
+  index: number;
+  select: (index: number) => void;
 }
 
 export interface CharacterSelectProps {

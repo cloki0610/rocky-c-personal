@@ -128,11 +128,11 @@ export interface UseDualGameLoopOptions {
 export interface UsePlayerControlsOptions {
   world: RefObject<World | null>;
   active: boolean;
+  boardRef: RefObject<HTMLDivElement | null>;
+  scale: number;
 }
 
 export interface UsePlayerControlsResult {
-  boardRef: RefObject<HTMLDivElement | null>;
-  scale: number;
   aim: Vec;
   marker: ClickMarker | null;
   resetControls: () => void;
@@ -207,12 +207,6 @@ export interface DualHeaderProps {
 
 export interface FighterStatusProps {
   world: World;
-}
-
-export interface HealthBarProps {
-  hp: number;
-  color: string;
-  label: string;
 }
 
 export interface AbilityBarProps {

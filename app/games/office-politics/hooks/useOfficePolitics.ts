@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createGame, clickSquare, canMove, canPlace } from "../utils/game";
+import { createGame } from "../utils/game";
 import useOfficePoliticsAI from "./useOfficePoliticsAI";
-import type { Piece } from "../interfaces/OfficePoliticsTypes";
+import useOfficePoliticsControls from "./useOfficePoliticsControls";
 
 export default function useOfficePolitics(
   initBoardSize: number,
@@ -11,9 +11,11 @@ export default function useOfficePolitics(
     createGame(initBoardSize, initStaffCountTarget),
   );
   const ai = useOfficePoliticsAI(game, setGame);
+  const controls = useOfficePoliticsControls(game, setGame, ai.isComputerTurn);
   return {
     ...game,
     ...ai,
+    ...controls,
     initializeBoard: () =>
       setGame((previous) =>
         createGame(
@@ -23,26 +25,6 @@ export default function useOfficePolitics(
           previous.performanceTarget,
         ),
       ),
-    handleSquareClick: (row: number, col: number) => {
-      if (ai.isComputerTurn) return;
-      setGame((previous) => clickSquare(previous, row, col));
-    },
-    isValidMove: (
-      piece: Piece,
-      fromRow: number,
-      fromCol: number,
-      toRow: number,
-      toCol: number,
-    ) =>
-      !game.gameOver &&
-      !ai.isComputerTurn &&
-      piece.player === game.currentPlayer &&
-      canMove(game.board, fromRow, fromCol, toRow, toCol),
-    isValidPlacement: (row: number, col: number) =>
-      !game.gameOver &&
-      !ai.isComputerTurn &&
-      game.currentPlayer === "C" &&
-      canPlace(game.board, row, col),
     // A new board size also applies that size's recommended targets.
     setBoardSize: (size: number) =>
       setGame((previous) => createGame(size, previous.staffCountTarget)),

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import useBoardScale from "@/app/games/hooks/useBoardScale";
 import type {
   Difficulty,
   DualScreen,
@@ -9,13 +10,14 @@ import type {
   UseDrDualResult,
   World,
 } from "../interfaces/DrDualTypes";
+import { ARENA_W } from "../utils/constants";
 import { initWorld } from "../utils/game";
 import useDualGameLoop from "./useDualGameLoop";
 import usePlayerControls from "./usePlayerControls";
 
 /**
- * Screen flow and session record for the duel; composes the simulation loop
- * and the player's controls around one shared world ref.
+ * Screen flow and session record for the duel; composes the simulation loop,
+ * board scaling, and the player's controls around one shared world ref.
  */
 export default function useDrDual(): UseDrDualResult {
   const [screen, setScreen] = useState<DualScreen>("select");
@@ -33,7 +35,13 @@ export default function useDrDual(): UseDrDualResult {
   }, []);
 
   useDualGameLoop({ world, active, runId, onMatchOver });
-  const { resetControls, ...controls } = usePlayerControls({ world, active });
+  const { boardRef, scale } = useBoardScale(ARENA_W, active);
+  const { resetControls, ...controls } = usePlayerControls({
+    world,
+    active,
+    boardRef,
+    scale,
+  });
 
   const startMatch = useCallback(
     (difficulty: Difficulty) => {
@@ -51,6 +59,8 @@ export default function useDrDual(): UseDrDualResult {
     screen,
     world: world.current,
     record,
+    boardRef,
+    scale,
     startMatch,
     backToMenu,
     ...controls,

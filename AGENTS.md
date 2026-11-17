@@ -29,16 +29,21 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/utils/motion.ts`                                         | Typed, reusable Framer Motion variants                                                                              |
 | `app/games/page.tsx`                                          | Server-rendered game list page and metadata                                                                         |
 | `app/games/components/GamesContent.tsx`                       | Client-rendered game cards linking to each game with next-transition-router                                         |
+| `app/games/components/`                                       | Reusable game UI: `ScaledStage`, `GameOverDialog`, `OverlayBanner`, `ProgressBar`, `DiamondPips`, `ControlHints`    |
+| `app/games/hooks/`                                            | Reusable hooks: `useKeyDown`, `useHeldKeys` (held-key ref), and `useBoardScale` (fit a fixed-size board)            |
+| `app/games/interfaces/GamesTypes.ts`                          | Types for the shared game hooks and components                                                                      |
+| `app/games/utils/keyboard.ts`                                 | Shared `normalizeKey` keyboard normalization                                                                        |
 | `app/games/utils/constants.ts`                                | Game list entries (name, description, href) and list animations; add new games here                                 |
 | `app/games/endless-arena/page.tsx`                            | Client-rendered arena using the game hook                                                                           |
 | `app/games/endless-arena/layout.tsx`                          | Server layout and arena route metadata                                                                              |
 | `app/games/endless-arena/components/character-select/`        | Fighter selection and class stat pips                                                                               |
 | `app/games/endless-arena/components/battlefield/`             | Arena board, combat visuals, enemies, and particles                                                                 |
 | `app/games/endless-arena/components/hud/`                     | Header, health bars, status, controls, and game-state overlays                                                      |
-| `app/games/endless-arena/hooks/useEndlessArena.ts`            | Arena state, keyboard listeners, responsive sizing, and animation-loop lifecycle                                    |
+| `app/games/endless-arena/hooks/useEndlessArena.ts`            | Arena state, screen flow, and animation loop; composes `useArenaControls` and `useBoardScale`                       |
+| `app/games/endless-arena/hooks/useArenaControls.ts`           | Player controls: held arrow/A/S keys in a ref read by the simulation step                                           |
+| `app/games/endless-arena/hooks/useCharacterSelectControls.ts` | Fighter-select controls: ←/→ cycle classes, Enter/Space start                                                       |
 | `app/games/endless-arena/utils/constants.ts`                  | Arena dimensions, fighter classes, enemy stats, and keyboard bindings                                               |
 | `app/games/endless-arena/utils/game.ts`                       | World initialization, progression, combat, geometry, and simulation helpers                                         |
-| `app/games/endless-arena/utils/keyboard.ts`                   | Keyboard input normalization                                                                                        |
 | `app/games/endless-arena/interfaces/EndlessArenaTypes.ts`     | All custom arena types, including game state and component props                                                    |
 | `app/games/office-politics/page.tsx`                          | Server-rendered page shell, metadata, and game provider                                                             |
 | `app/games/office-politics/components/board/`                 | Board with move/placement highlights, protected-Staff shields, and accessible square labels                         |
@@ -47,8 +52,9 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/games/office-politics/components/game/`                  | Game layout and status chips (round, survival, Seniors, performance, turn)                                          |
 | `app/games/office-politics/components/instructions/`          | Renders the how-to-play sections from `utils/instructions.ts`                                                       |
 | `app/games/office-politics/context/PoliticsContext.tsx`       | Exposes game state and display settings to components                                                               |
-| `app/games/office-politics/hooks/useOfficePolitics.ts`        | React adapter around the pure game engine; composes the AI hook and ignores board clicks on computer turns          |
+| `app/games/office-politics/hooks/useOfficePolitics.ts`        | React adapter around the pure game engine and settings; composes the AI and controls hooks                          |
 | `app/games/office-politics/hooks/useOfficePoliticsAI.ts`      | Human/computer seat selection and the delayed timer that plays computer turns                                       |
+| `app/games/office-politics/hooks/useOfficePoliticsControls.ts` | Human board input: square clicks and legal move/placement checks, ignored on computer turns                         |
 | `app/games/office-politics/utils/game.ts`                     | Pure engine: moves, protection, placement, promotion, performance, outcomes, presets                                |
 | `app/games/office-politics/utils/game.test.mjs`               | Node regression tests for game rules                                                                                |
 | `app/games/office-politics/utils/ai.ts`                       | Pure computer opponent: scores legal moves and placements, then plays them through `clickSquare`                    |
@@ -59,7 +65,8 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/games/barebone-td/layout.tsx`                            | Server layout with route metadata and the dark full-height game frame                                               |
 | `app/games/barebone-td/components/board/`                     | Grid, tower, enemy, and projectile rendering                                                                        |
 | `app/games/barebone-td/components/hud/`                       | Header, tower toolbar, selected-tower panel (upgrade/sell), and game-state overlays                                 |
-| `app/games/barebone-td/hooks/useBareboneTD.ts`                | Mutable world ref, requestAnimationFrame loop on a speed-scaled simulated clock, board scaling, and selection state |
+| `app/games/barebone-td/hooks/useBareboneTD.ts`                | Mutable world ref and requestAnimationFrame loop on a speed-scaled clock; composes `useTDControls`, `useBoardScale` |
+| `app/games/barebone-td/hooks/useTDControls.ts`                | Player controls: tower selection/placement, upgrade, sell, start wave, and game speed                               |
 | `app/games/barebone-td/utils/constants.ts`                    | Grid size, enemy path, economy, speed steps, and tower definitions                                                  |
 | `app/games/barebone-td/utils/game.ts`                         | Wave planning, tower placement, upgrades, selling, and the simulation step                                          |
 | `app/games/barebone-td/interfaces/BareboneTDTypes.ts`         | Tower, enemy, projectile, and world types                                                                           |
@@ -67,21 +74,22 @@ The application currently has no API routes, database, authentication, or saved 
 | `app/games/stepping-stone/layout.tsx`                         | Server layout with route metadata and the full-height game frame                                                    |
 | `app/games/stepping-stone/components/board/`                  | Crossing scene, stone columns and buttons, and reduced-motion-aware Framer Motion player jump/fall animation        |
 | `app/games/stepping-stone/components/hud/`                    | Header with score and health, keyboard hints, and the game-over overlay                                             |
-| `app/games/stepping-stone/hooks/useSteppingStone.ts`          | React adapter around the pure engine: world state, best score, checkpoint-toast timer, and keyboard listener        |
+| `app/games/stepping-stone/hooks/useSteppingStone.ts`          | React adapter around the pure engine: world state, best score, and checkpoint-toast timer                           |
+| `app/games/stepping-stone/hooks/useSteppingStoneControls.ts`  | Player controls: ArrowUp/W and ArrowDown/S choose a stone                                                           |
 | `app/games/stepping-stone/hooks/useSceneColumns.ts`           | Responsive visible-column count (three narrow, five at `lg`) via `matchMedia`                                       |
 | `app/games/stepping-stone/utils/constants.ts`                 | Animation durations, column counts, and scene layout anchors                                                        |
 | `app/games/stepping-stone/utils/game.ts`                      | Health and checkpoint constants, jump resolution, falls, checkpoint rewinds, and healing                            |
 | `app/games/stepping-stone/utils/game.test.mjs`                | Node regression tests for the crossing engine                                                                       |
-| `app/games/stepping-stone/utils/keyboard.ts`                  | Keyboard normalization and ArrowUp/W, ArrowDown/S stone bindings                                                    |
+| `app/games/stepping-stone/utils/keyboard.ts`                  | ArrowUp/W, ArrowDown/S stone bindings                                                                               |
 | `app/games/stepping-stone/interfaces/SteppingStoneTypes.ts`   | World, phase, and component prop types                                                                              |
 | `app/games/dr-dual/page.tsx`                                  | Client-rendered duel page composing the header, status bars, arena, and ability bar from the game hook              |
 | `app/games/dr-dual/layout.tsx`                                | Server layout with route metadata and the scrollable full-height game frame                                         |
 | `app/games/dr-dual/components/arena/`                         | Arena board with pointer handlers, Doctor sprites, burn aura, cleavers, aim guide, and damage numbers                |
 | `app/games/dr-dual/components/hud/`                           | Header, health/round/status bars, Q/W/E/R ability buttons with cooldowns, and round/match overlays                  |
 | `app/games/dr-dual/components/setup/`                         | Ability overview and CPU difficulty selection                                                                       |
-| `app/games/dr-dual/hooks/useDrDual.ts`                        | Screen flow, match start, session record; composes the loop and controls hooks                                      |
+| `app/games/dr-dual/hooks/useDrDual.ts`                        | Screen flow, match start, session record; composes the loop, board scale, and controls hooks                        |
 | `app/games/dr-dual/hooks/useDualGameLoop.ts`                  | requestAnimationFrame loop, per-run CPU brain, simulation step, match-over report                                   |
-| `app/games/dr-dual/hooks/usePlayerControls.ts`                | Mouse move/attack orders, cursor aim, Q/W/E/R keys, ability buttons, board scaling                                  |
+| `app/games/dr-dual/hooks/usePlayerControls.ts`                | Player controls: mouse move/attack orders, cursor aim, Q/W/E/R keys, ability buttons                                |
 | `app/games/dr-dual/utils/game.ts`                             | World setup and the move/attack/cast commands                                                                       |
 | `app/games/dr-dual/utils/simulation.ts`                       | Simulation `step`: timers, regen, burn, movement, melee, cleavers, and round resolution                             |
 | `app/games/dr-dual/utils/ai.ts`                               | CPU opponent that issues the same commands as the player, tuned per difficulty                                      |
@@ -179,6 +187,7 @@ Keep `game.ts`, `simulation.ts`, their tests, the ability descriptions in `const
 ## Change conventions
 
 - Inspect the working tree before editing and preserve unrelated user changes.
+- Keep player input in a dedicated controls hook per game (for example `useTDControls`), built on the shared hooks in `app/games/hooks/`, and compose it from the game's main hook. Put UI used by more than one game in `app/games/components/`.
 - Keep rules in the pure engine and UI concerns in components. Use functional React state updates; do not mutate prior boards, rows, or pieces, or maintain duplicate piece-count and staff-location state.
 - Keep route metadata in server components. Add `"use client"` at interactive boundaries that need hooks, context, or browser APIs.
 - New games live under `app/games/<name>/` with their own `layout.tsx` or `page.tsx` metadata, and need an entry in `app/games/utils/constants.ts` to appear on `/games`. The navigation bar (`app/utils/menu.ts`) lists only Games and About.

@@ -13,7 +13,7 @@ import {
   initWorld,
   landJump,
 } from "../utils/game";
-import { normalizeKey, sideForKey } from "../utils/keyboard";
+import useSteppingStoneControls from "./useSteppingStoneControls";
 
 export default function useSteppingStone(): UseSteppingStoneResult {
   const [world, setWorld] = useState(initWorld);
@@ -47,16 +47,7 @@ export default function useSteppingStone(): UseSteppingStoneResult {
 
   const restart = useCallback(() => setWorld(initWorld()), []);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      const side = sideForKey(normalizeKey(event));
-      if (!side) return;
-      event.preventDefault();
-      choose(side);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [choose]);
+  useSteppingStoneControls(choose);
 
   return { world, best, choose, land, acknowledgeFall, restart };
 }

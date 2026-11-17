@@ -1,36 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { CharacterSelectProps } from "../../interfaces/EndlessArenaTypes";
 import { CLASS_LIST } from "../../utils/constants";
 import { rangedDesc } from "../../utils/game";
 import Pips from "./Pips";
+import useCharacterSelectControls from "../../hooks/useCharacterSelectControls";
 
 export default function CharacterSelect({
   onStart,
   best,
 }: CharacterSelectProps) {
-  const [idx, setIdx] = useState(0);
+  const { index: idx, select } = useCharacterSelectControls(onStart);
   const sel = CLASS_LIST[idx];
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        e.preventDefault();
-        setIdx(
-          (i) =>
-            (e.key === "ArrowLeft" ? i + CLASS_LIST.length - 1 : i + 1) %
-            CLASS_LIST.length,
-        );
-      }
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        onStart(CLASS_LIST[idx].id);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [idx, onStart]);
 
   return (
     <div className="w-full max-w-3xl">
@@ -54,12 +35,13 @@ export default function CharacterSelect({
           return (
             <button
               key={c.id}
-              onClick={() => setIdx(i)}
+              onClick={() => select(i)}
               onDoubleClick={() => onStart(c.id)}
-              className={`text-left rounded-2xl p-5 bg-slate-900/80 ring-2 transition-all duration-200 ${active
+              className={`text-left rounded-2xl p-5 bg-slate-900/80 ring-2 transition-all duration-200 ${
+                active
                   ? `${c.ring} scale-[1.02]`
                   : "ring-slate-800 opacity-60 hover:opacity-90"
-                }`}
+              }`}
               style={
                 active
                   ? { boxShadow: `0 12px 40px -12px ${c.glow}` }
@@ -79,9 +61,7 @@ export default function CharacterSelect({
                   <span className="absolute top-1/2 right-1 -translate-y-1/2 w-2 h-2 bg-white rounded-full" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-black leading-none">
-                    {c.name}
-                  </h2>
+                  <h2 className="text-xl font-black leading-none">{c.name}</h2>
                   <p
                     className={`text-[10px] font-mono tracking-widest mt-1 ${c.text}`}
                   >

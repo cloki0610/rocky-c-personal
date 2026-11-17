@@ -1,28 +1,7 @@
-import type {
-  Fighter,
-  FighterStatusProps,
-  HealthBarProps,
-} from "../../interfaces/DrDualTypes";
+import DiamondPips from "@/app/games/components/DiamondPips";
+import ProgressBar from "@/app/games/components/ProgressBar";
+import type { Fighter, FighterStatusProps } from "../../interfaces/DrDualTypes";
 import { FIGHTER_NAMES, MAX_HP, ROUNDS_TO_WIN } from "../../utils/constants";
-
-const HealthBar = ({ hp, color, label }: HealthBarProps) => (
-  <div
-    role="meter"
-    aria-label={label}
-    aria-valuemin={0}
-    aria-valuemax={MAX_HP}
-    aria-valuenow={Math.round(hp)}
-    className="relative w-full h-4 bg-black/60 rounded-full overflow-hidden ring-1 ring-white/15"
-  >
-    <div
-      className={`h-full ${color} transition-[width] duration-150 ease-out`}
-      style={{ width: `${Math.max(0, (hp / MAX_HP) * 100)}%` }}
-    />
-    <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-bold text-white [text-shadow:0_1px_2px_#000]">
-      {Math.ceil(hp)} / {MAX_HP}
-    </span>
-  </div>
-);
 
 const statuses = (f: Fighter) =>
   [
@@ -51,20 +30,14 @@ function Side({ f, align }: { f: Fighter; align: "left" | "right" }) {
         >
           {name.toUpperCase()}
         </span>
-        <span
-          className="flex gap-1"
-          aria-label={`${name}: ${f.roundsWon} of ${ROUNDS_TO_WIN} rounds won`}
-        >
-          {Array.from({ length: ROUNDS_TO_WIN }, (_, i) => (
-            <span
-              key={i}
-              aria-hidden
-              className={`w-2.5 h-2.5 rotate-45 ring-1 ring-amber-400/70 ${
-                i < f.roundsWon ? "bg-amber-400" : "bg-transparent"
-              }`}
-            />
-          ))}
-        </span>
+        <DiamondPips
+          label={`${name}: ${f.roundsWon} of ${ROUNDS_TO_WIN} rounds won`}
+          total={ROUNDS_TO_WIN}
+          filled={f.roundsWon}
+          pipClassName="w-2.5 h-2.5 ring-1 ring-amber-400/70"
+          filledClassName="bg-amber-400"
+          emptyClassName="bg-transparent"
+        />
         <span
           className={`flex gap-1 overflow-hidden ${align === "right" ? "flex-row-reverse mr-auto" : "ml-auto"}`}
         >
@@ -78,11 +51,15 @@ function Side({ f, align }: { f: Fighter; align: "left" | "right" }) {
           ))}
         </span>
       </div>
-      <HealthBar
-        hp={f.hp}
+      <ProgressBar
+        value={f.hp}
+        max={MAX_HP}
+        height={16}
         color={isPlayer ? "bg-sky-500" : "bg-rose-500"}
         label={`${name} health`}
-      />
+      >
+        {Math.ceil(f.hp)} / {MAX_HP}
+      </ProgressBar>
     </div>
   );
 }

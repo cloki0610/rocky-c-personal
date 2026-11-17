@@ -1,5 +1,5 @@
 import type { TimedWorldProps } from "../../interfaces/EndlessArenaTypes";
-import Bar from "./Bar";
+import ProgressBar from "@/app/games/components/ProgressBar";
 import { scaleFor } from "../../utils/game";
 
 export default function ArenaHud({ world: w, now }: TimedWorldProps) {
@@ -19,9 +19,9 @@ export default function ArenaHud({ world: w, now }: TimedWorldProps) {
               {Math.ceil(w.boss.hp)} / {w.boss.maxHp}
             </span>
           </div>
-          <Bar
-            hp={w.boss.hp}
-            maxHp={w.boss.maxHp}
+          <ProgressBar
+            value={w.boss.hp}
+            max={w.boss.maxHp}
             color="bg-gradient-to-r from-orange-600 to-red-500"
             height={14}
           />
@@ -41,9 +41,9 @@ export default function ArenaHud({ world: w, now }: TimedWorldProps) {
             {Math.ceil(p.hp)} / {p.maxHp}
           </span>
         </div>
-        <Bar
-          hp={p.hp}
-          maxHp={p.maxHp}
+        <ProgressBar
+          value={p.hp}
+          max={p.maxHp}
           color={
             p.hp / p.maxHp > 0.35
               ? cls.bar
